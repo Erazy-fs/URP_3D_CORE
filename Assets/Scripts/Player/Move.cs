@@ -25,12 +25,9 @@ public class Move : MonoBehaviour
 
     private void MovementLogic()
     {
-        if (_isGrounded)
-        { 
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-            Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-            _rb.AddForce(movement * Speed);
+        if (_isGrounded && Input.GetAxis("Vertical") > 0)
+        {
+            _rb.AddForce(transform.forward * Speed);
         }
     }
 
@@ -38,17 +35,9 @@ public class Move : MonoBehaviour
     {
         if (Input.GetAxis("Jump") > 0)
         {
-            //Debug.Log("Jump");
             if (_isGrounded)
             {
                 _rb.AddForce(Vector3.up * JumpForce);
-
-                // ќбратите внимание что € делаю на основе Vector3.up 
-                // а не на основе transform.up. ≈сли персонаж упал или 
-                // если персонаж -- шар, то его личный "верх" может 
-                // любое направление. ¬лево, вправо, вниз...
-                // Ќо нам нужен скачек только в абсолютный вверх, 
-                // потому и Vector3.up
             }
         }
     }
