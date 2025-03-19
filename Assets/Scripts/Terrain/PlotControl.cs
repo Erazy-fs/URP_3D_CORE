@@ -10,7 +10,7 @@ public class PlotControl : MonoBehaviour {
     public  int colorIndex;
     public  float waveDuratation;
     public  int waveCount;
-    public  float waveHeight = .003f;
+    public  float waveHeight = .05f;
     public  Color startColor = Color.red;
     private Color nextColor  = new(0, 0, 255);
     public  bool doWave      = true;
@@ -32,7 +32,8 @@ public class PlotControl : MonoBehaviour {
         isUpdating = false;
         MeshFilter meshFilter = GetComponent<MeshFilter>();
         mesh = meshFilter.mesh;
-
+        Debug.Log($"{transform.parent.name} x{transform.parent.localScale.x} y{transform.parent.localScale.y} z{transform.parent.localScale.z}");
+        waveHeight /= transform.parent.localScale.y;
         vertices = mesh.vertices;
         OnReady?.Invoke();
         isReady = true;
@@ -48,19 +49,6 @@ public class PlotControl : MonoBehaviour {
 
     
     void Update() {
-
-        // if (!isUpdating && Input.GetMouseButtonDown(0)) {  //ЛКМ
-
-        //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        //     if (Physics.Raycast(ray, out RaycastHit hit)) {
-        //         if (hit.collider != null && hit.collider.gameObject == gameObject) {
-        //             var maxDistance = HitPosition(hit.point);
-        //             StartWaves(UnityEngine.Random.ColorHSV(), 3, 0, 2, maxDistance);
-        //         }
-        //     }
-        // }
-
         CalculateWave();
     }
 
@@ -71,7 +59,7 @@ public class PlotControl : MonoBehaviour {
         for (int i = 0; i < mesh.vertexCount; i++) {
             var vertexWorldPosition = transform.TransformPoint(mesh.vertices[i]);
             vertexDistances[i] = Vector3.Distance(vertexWorldPosition, position);
-            vertexNoise[i]     = Mathf.PerlinNoise(mesh.vertices[i].x*150, mesh.vertices[i].y*150);
+            if (doWave) vertexNoise[i] = Mathf.PerlinNoise(mesh.vertices[i].x*150, mesh.vertices[i].z*150);
         }
 
         sortVertices = vertexDistances.Keys.ToArray();
@@ -133,13 +121,12 @@ public class PlotControl : MonoBehaviour {
         int nextLastIndex = 0;
 
         var newVertices = doWave ? mesh.vertices : null;
-        var _i = 0;
         for (var i=lastIndex; i<mesh.vertexCount; i++){
             var j = sortVertices[i];
             var d = vertexDistances[j];
             if (d < waveStart) {
                 newColors  [j]   = waveColor;       //Цвет волны
-                if (doWave) newVertices[j].z = vertices[j].z;   //Возврат высоты
+                if (doWave) newVertices[j].y = vertices[j].y;   //Возврат высоты
                 nextLastIndex = i;      
             }
             else if (d <= waveEnd) {
@@ -148,8 +135,7 @@ public class PlotControl : MonoBehaviour {
                 // var wave = Mathf.Abs(cur_radius+step*.5f - d);   //Обратная волна AaA
                 
                 newColors[j] = Color.Lerp(prevWaveColor, waveColor, grad);              //Цвет
-                if (doWave) newVertices[j].z = vertices[j].z + waveHeight * wave * vertexNoise[j];  //Волна
-                _i = i;
+                if (doWave) newVertices[j].y = vertices[j].y + waveHeight * wave;// * vertexNoise[j];  //Волна
             } else break;
         }
         lastIndex = nextLastIndex;
