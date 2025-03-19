@@ -32,7 +32,8 @@ public class SettingsManager : MonoBehaviour
 
     void LoadSettings()
     {
-        volumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        volumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 0.7f);
+        AudioListener.volume = volumeSlider.value;
 
         fullscreenToggle.isOn = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
         Screen.fullScreen = fullscreenToggle.isOn;
