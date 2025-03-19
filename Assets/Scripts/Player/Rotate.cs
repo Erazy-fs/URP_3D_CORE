@@ -38,8 +38,6 @@ public class Rotate : MonoBehaviour
 
         rotationX -= mouseY;
         rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-
-        Debug.Log("Rot");
         transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
     }
