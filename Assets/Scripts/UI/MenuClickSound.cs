@@ -4,10 +4,14 @@ using UnityEngine.EventSystems;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class MenuClickSound : MonoBehaviour
 {
-    [SerializeField] private AudioSource _clickSound;
+    [SerializeField]
+    private AudioSource _clickSound;
+    private float _soundCooldown = 0.15f;
+    private float _lastSoundTime;
 
     private void Start()
     {
@@ -34,10 +38,14 @@ public class MenuClickSound : MonoBehaviour
 
     private void PlayClickSound()
     {
-        _clickSound?.Play();
+        if (Time.time - _lastSoundTime >= _soundCooldown)
+        {
+            _lastSoundTime = Time.time;
+            _clickSound?.Play();
+        }
     }
 
-    private IEnumerator DelayedListener(System.Action action)
+    private IEnumerator DelayedListener(Action action)
     {
         yield return null;
         action.Invoke();
