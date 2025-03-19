@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class GroundControl : MonoBehaviour
@@ -7,6 +8,8 @@ public class GroundControl : MonoBehaviour
 
     public int colorsCount = 12;
     private PlotControl[] plots = new PlotControl[]{};
+    public GameObject zeusPrefab;
+    private GameObject zeus;
 
     void Start()
     {
@@ -30,23 +33,29 @@ public class GroundControl : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0)) {  //ЛКМ
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
             if (Physics.Raycast(ray, out RaycastHit hit)) {
                 if (hit.collider != null) {
-                    var color = UnityEngine.Random.ColorHSV();
                     var radius = 0f;
                     var flag = false;
+                    var index = new System.Random().Next(0, colorsCount);
+                    
                     foreach (var plot in plots) 
                         if (plot.plotUpdating) {
                             flag = true;
                             break;
                         }
+                    
+                    zeus = Instantiate(zeusPrefab);
+                    
+                    zeus.transform.position = new Vector3(hit.point.x, hit.point.y-.5f, hit.point.z) ;
+
                     if (!flag) {
                         foreach (var plot in plots)
                             radius = Mathf.Max(radius, plot.HitPosition(hit.point));
                         
                         foreach (var plot in plots) {
-                            plot.StartWaves(color, 3, 0, 5, radius);
+                            Color.RGBToHSV(plot.startColor, out _, out var s, out var v);
+                            plot.StartWaves(Color.HSVToRGB((float)index / colorsCount, s, v), 3, 0, 3, radius);
                         }
                     }
                 }
