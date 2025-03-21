@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GroundControl : MonoBehaviour
 {
@@ -14,16 +15,16 @@ public class GroundControl : MonoBehaviour
     void Start()
     {
         plots = GetComponentsInChildren<PlotControl>();
-        foreach (var plot in plots) {            
+        foreach (var plot in plots) {
             void SetParams(PlotControl plot){
                 Color.RGBToHSV(plot.startColor, out _, out var s, out var v);
                 var plotColor = Color.HSVToRGB((float)plot.colorIndex / colorsCount, s, v);
                 plot.SetStartParams(plotColor);
             }
 
-            if (plot.isReady) 
+            if (plot.isReady)
                 SetParams(plot);
-            else 
+            else
                 plot.OnReady += () => SetParams(plot);
         }
     }
@@ -38,21 +39,19 @@ public class GroundControl : MonoBehaviour
                     var radius = 0f;
                     var flag = false;
                     var index = new System.Random().Next(0, colorsCount);
-                    
-                    foreach (var plot in plots) 
+
+                    foreach (var plot in plots)
                         if (plot.plotUpdating) {
                             flag = true;
                             break;
                         }
-                    
-                    zeus = Instantiate(zeusPrefab);
-                    
-                    zeus.transform.position = new Vector3(hit.point.x, hit.point.y-.5f, hit.point.z) ;
 
                     if (!flag) {
+                        zeus = Instantiate(zeusPrefab);
+                        zeus.transform.position = new Vector3(hit.point.x, hit.point.y-.5f, hit.point.z) ;
                         foreach (var plot in plots)
                             radius = Mathf.Max(radius, plot.HitPosition(hit.point));
-                        
+
                         foreach (var plot in plots) {
                             Color.RGBToHSV(plot.startColor, out _, out var s, out var v);
                             plot.StartWaves(Color.HSVToRGB((float)index / colorsCount, s, v), 3, 0, 3, radius);
@@ -61,6 +60,6 @@ public class GroundControl : MonoBehaviour
                 }
             }
         }
-        
+
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,14 +15,27 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
+    public UIDocument uiDocument;
+
+    private VisualElement colorCirclePanel;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        VisualElement root = uiDocument.rootVisualElement;
+        colorCirclePanel = root.Q<VisualElement>("colorCirclePanel");
+        colorCirclePanel.style.display = DisplayStyle.None;
     }
 
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.U)) {
+            colorCirclePanel.style.display = colorCirclePanel.style.display == DisplayStyle.None ? DisplayStyle.Flex : DisplayStyle.None;
+            return;
+        }
+
+
         // Check if the player is grounded
         isGrounded = controller.isGrounded;
 
