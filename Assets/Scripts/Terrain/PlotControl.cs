@@ -116,7 +116,8 @@ public class PlotControl : MonoBehaviour {
         var waveColor = Color.Lerp(startColor, nextColor, (float)waveIndex/(float)waveCount);
 
         var waveStart = maxRadius * t;
-        var step      = maxRadius * Mathf.Max(.025f , .5f * t);
+        var step      = maxRadius * .2f * t;
+        var halfStep  = step*.5f;
         var waveEnd   = waveStart + step;
         int nextLastIndex = 0;
 
@@ -131,11 +132,11 @@ public class PlotControl : MonoBehaviour {
             }
             else if (d <= waveEnd) {
                 var grad = Mathf.Clamp01(1 - (d - waveStart) / step);             //Градиент волны
-                var wave = Mathf.Clamp01(1 - Mathf.Abs(waveStart+step*.5f - d));  //Волна aAa
-                // var wave = Mathf.Abs(cur_radius+step*.5f - d);   //Обратная волна AaA
+                var wave = 1 - Mathf.Abs(waveStart+halfStep - d)/halfStep;  //Волна aAa
+                // var wave = Mathf.Abs(waveStart+step*.5f - d);   //Обратная волна AaA
                 
                 newColors[j] = Color.Lerp(prevWaveColor, waveColor, grad);              //Цвет
-                if (doWave) newVertices[j].y = vertices[j].y + waveHeight * wave;// * vertexNoise[j];  //Волна
+                if (doWave) newVertices[j].y = vertices[j].y + waveHeight * wave * vertexNoise[j];  //Волна
             } else break;
         }
         lastIndex = nextLastIndex;
