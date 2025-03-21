@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 
 public class Move : MonoBehaviour
@@ -38,6 +37,7 @@ public class Move : MonoBehaviour
             if (_isGrounded)
             {
                 _rb.AddForce(Vector3.up * JumpForce);
+                Debug.Log("Jump");
             }
         }
     }
