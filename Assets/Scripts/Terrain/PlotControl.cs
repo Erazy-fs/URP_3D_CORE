@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mono.Cecil.Cil;
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 public class PlotControl : MonoBehaviour {
@@ -32,7 +29,6 @@ public class PlotControl : MonoBehaviour {
         isUpdating = false;
         MeshFilter meshFilter = GetComponent<MeshFilter>();
         mesh = meshFilter.mesh;
-        Debug.Log($"{transform.parent.name} x{transform.parent.localScale.x} y{transform.parent.localScale.y} z{transform.parent.localScale.z}");
         waveHeight /= transform.parent.localScale.y;
         vertices = mesh.vertices;
         OnReady?.Invoke();
@@ -82,6 +78,19 @@ public class PlotControl : MonoBehaviour {
         prevTime       = 0;
         prevWaveColor  = startColor;
         isUpdating     = true;
+    }
+
+    public void StopWaves(){
+        waveIndex      = 1;
+        elapsedTime    = 0;
+        lastIndex      = 0;
+        prevTime       = 0;
+        prevWaveColor  = startColor;
+        isUpdating     = false;
+        if (doWave) {
+            mesh.vertices = vertices;
+            mesh.RecalculateNormals();
+        }
     }
 
     private float prevTime;

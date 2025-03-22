@@ -1,0 +1,9 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="zeus_frame" style="flex-grow: 0; height: 45px; align-content: center; align-items: center; justify-content: center; flex-direction: row;">
+        <engine:VisualElement name="zeus_bar_box" style="flex-grow: 0; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); width: 60%; height: 15px;">
+            <engine:VisualElement name="zeus_bar" style="flex-grow: 0; background-color: rgb(255, 255, 255); width: 100%; height: 100%; transition-delay: 0.2s;" />
+        </engine:VisualElement>
+        <engine:Label text="wave: 1/3" name="zeus_wave" style="position: absolute; right: 10px; color: rgb(255, 255, 255); margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+    </engine:VisualElement>
+    <engine:Label text="loading..." name="zeus_message" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+</engine:UXML>
