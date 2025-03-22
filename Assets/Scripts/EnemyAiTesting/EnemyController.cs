@@ -32,16 +32,16 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Цель недостижима!");
+                //Debug.LogWarning("Цель недостижима!");
             }
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
-                Debug.Log("Враг достиг цели или остановился.");
+                //Debug.Log("Враг достиг цели или остановился.");
             }
-            Debug.Log($"Remaining Distance: {agent.remainingDistance}");
-            Debug.Log($"Path Pending: {agent.pathPending}");
-            Debug.Log($"Has Path: {agent.hasPath}");
-            Debug.Log($"Is Path Stale: {agent.isPathStale}");
+            //Debug.Log($"Remaining Distance: {agent.remainingDistance}");
+            //Debug.Log($"Path Pending: {agent.pathPending}");
+            //Debug.Log($"Has Path: {agent.hasPath}");
+            //Debug.Log($"Is Path Stale: {agent.isPathStale}");
         }
 
         //if (player != null && agent != null)
