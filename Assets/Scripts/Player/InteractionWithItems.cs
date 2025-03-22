@@ -1,26 +1,33 @@
 using UnityEngine;
 using TMPro;
-using System;
 
 public class InteractionWithItems : MonoBehaviour
 {
-    public Camera mainCamera;
+    public Transform playerTransform;
     public float interactionDistance = 5f;
     public GameObject interactionUI;
     public TextMeshProUGUI interactionText;
 
+    private GameObject heldItem = null; // Текущий предмет в инвентаре
+
     void Update()
     {
-        InteractionRay();
+        if (heldItem != null)
+            PlaceItem(); // Если предмет уже в руках, ставим его перед персонажем
+        else
+            InteractionRay(); // Если предмета нет, пытаемся взять новый
     }
 
     private void InteractionRay()
     {
-        Ray ray = mainCamera.ViewportPointToRay(Vector3.one / 2f);
+        if (heldItem != null) return; // Если уже что-то держим, пропускаем
+
+        Vector3 rayOrigin = playerTransform.position;
+        Vector3 rayDirection = playerTransform.forward;
         RaycastHit hit;
         bool hitSomething = false;
 
-        if (Physics.Raycast(ray, out hit, interactionDistance))
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, interactionDistance))
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
 
@@ -30,11 +37,26 @@ public class InteractionWithItems : MonoBehaviour
                 interactionText.text = interactable.GetDescription();
 
                 if (Input.GetKeyDown(KeyCode.E))
-                    interactable.Interact();
+                {
+                    heldItem = hit.collider.gameObject;
+                    heldItem.SetActive(false); // Отключаем объект
+                    hitSomething = false;
+                }
             }
         }
+        interactionUI.SetActive(hitSomething);
+    }
 
-        if(interactionUI.activeSelf != hitSomething)
-            interactionUI.SetActive(hitSomething);
+    private void PlaceItem()
+    {
+        if (heldItem == null) return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            // Размещаем предмет перед персонажем
+            heldItem.transform.position = playerTransform.position + playerTransform.forward * 1.5f;
+            heldItem.SetActive(true);
+            heldItem = null; // Очищаем инвентарь
+        }
     }
 }
