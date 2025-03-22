@@ -6,6 +6,7 @@ public class MenuManager : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("StartGame");
+        PlayerPrefs.SetInt("CompletedLevels", 0);
         GameManager.LoadScene();
     }
 

@@ -16,7 +16,7 @@ public class GroundControl : MonoBehaviour
     public float waveDuratation   = 5f;
     public float timeBetweenWaves = 5f;
     public int waveCount = 3;
-    public Camera camera;
+    public Camera downCamera;
 
     public UIDocument zeusUIdoc;
     private VisualElement zeusUI;
@@ -46,13 +46,13 @@ public class GroundControl : MonoBehaviour
         }
     }
 
-    IEnumerator ShakeCamera(float shakeForce = .5f) {
+    IEnumerator ShakeCamera(float shakeForce = .7f) {
         for(int i=0; i<5; i++){
             i++;
-            camera.transform.position = new Vector3(
-                camera.transform.position.x + UnityEngine.Random.Range(0f, shakeForce),
-                camera.transform.position.y + UnityEngine.Random.Range(0f, shakeForce),
-                camera.transform.position.z + UnityEngine.Random.Range(0f, shakeForce)
+            downCamera.transform.position = new Vector3(
+                downCamera.transform.position.x + UnityEngine.Random.Range(0f, shakeForce),
+                downCamera.transform.position.y + UnityEngine.Random.Range(0f, shakeForce),
+                downCamera.transform.position.z + UnityEngine.Random.Range(0f, shakeForce)
             );
             yield return new WaitForSeconds(.1f);
         }
@@ -60,23 +60,27 @@ public class GroundControl : MonoBehaviour
     }
 
     private void SetProgress(float progress){
-        zeusUIBar.style.width = Length.Percent(progress);
+        zeusUIBar.style.width = new Length(progress, LengthUnit.Percent);
+        zeusUIBar.MarkDirtyRepaint();
     }
 
     private void SetMessage(string message){
         zeusUIMessage.text = message;
     }
 
-    private void SetWaveMessage(int waveIndex, int count) {
-        zeusUIWave.text = $"wave: {waveIndex}/{count}";
+    private void SetWaveMessage(string message) {
+        zeusUIWave.text = message;
     }
 
     private GameObject zeus;
     private Animator zeusAnimator;
     IEnumerator LandZEUS(Vector3 point){
         zeusUI.style.display = DisplayStyle.Flex;
+        zeusUIBar.style.backgroundColor = new StyleColor(new Color(1f, 1f, 1f, 1f));
         Debug.Log($"Stand by for Z.E.U.S");
         SetMessage($"Stand by for Z.E.U.S");
+        SetWaveMessage("");
+        SetProgress(0f);
 
         //spawn zeus
         zeus = Instantiate(zeusPrefab);
@@ -99,7 +103,7 @@ public class GroundControl : MonoBehaviour
 
         //Запуск анимации приземления
         Debug.Log($"Landing...");
-        SetMessage($"Landing...");
+        SetMessage($"landing...");
         zeusAnimator.SetBool("isLanding", true);
 
         //Перенос объекта в нужную точку
@@ -112,21 +116,22 @@ public class GroundControl : MonoBehaviour
         StartCoroutine(ShakeCamera());
         zeusAnimator.SetBool("isLanding", false);
         Debug.Log($"Landing complete");
-        SetMessage($"Landing complete");
+        SetMessage($"landing complete");
         yield return null;
 
         //Запуск волн
-        Debug.Log($"Initialize G.A.I.A. protocol");
-        SetMessage($"Initialize G.A.I.A. protocol");
+        Debug.Log($"initialize G.A.I.A. protocol");
+        SetMessage($"initialize G.A.I.A. protocol...");
         yield return new WaitForSeconds(1f);
 
-        
-        SetMessage($"Executing G.A.I.A. protocol");
-        SetProgress(0f);
+
+        SetMessage($"executing G.A.I.A. protocol...");
         int waveIndex = 0;
         while (waveIndex < waveCount) {
             waveIndex++;
             Debug.Log($"wave: {waveIndex}/{waveCount} ({waveDuratation}sec)");
+
+            SetWaveMessage($"stage: {waveIndex}/{waveCount}");
 
             //Запуск анимации ударов
             zeusAnimator.SetBool("isPumping", true);
@@ -136,8 +141,8 @@ public class GroundControl : MonoBehaviour
             int visualWavesCount = (int)Mathf.Ceil(waveDuratation / 3f)+1;   //Кол-во визуальных волн
             foreach (var plot in plots) {
                 Color.RGBToHSV(plot.startColor, out _, out var s, out var v);
-                var colorIndex = plot.colorIndex + 1; //new System.Random().Next(0, colorsCount);
-                if (colorIndex >= colorsCount) colorIndex = 0;
+                var colorIndex = plot.colorIndex + 4; //new System.Random().Next(0, colorsCount);
+                if (colorIndex >= colorsCount) colorIndex -= colorsCount;
                 var newColor = Color.HSVToRGB((float)colorIndex / colorsCount, s, v);
                 plot.StartWaves(newColor, visualWavesCount, colorIndex, 3, maxRadius);
                 if (plot.doWave)
@@ -146,20 +151,29 @@ public class GroundControl : MonoBehaviour
 
             //Ожидани завершения волны
             //yield return new WaitForSeconds(waveDuratation);
-            var elapsedTime = 0f;
-            while (elapsedTime < waveDuratation) {
-                elapsedTime += Time.deltaTime;
-                SetProgress(elapsedTime/waveDuratation*100);
+            var executeTime = 0f;
+            while (executeTime < waveDuratation) {
+                executeTime += Time.deltaTime;
+                SetProgress(executeTime/waveDuratation*100);
                 yield return null;
             }
 
             //Остановка ударов
             zeusAnimator.SetBool("isPumping", false);
 
-            Debug.Log($"wave: {waveIndex}/{waveCount} finished. Waiting {timeBetweenWaves}sec");
             //Ожидани завершения волны
-            if (waveIndex != waveCount)
-                yield return new WaitForSeconds(timeBetweenWaves);
+            Debug.Log($"stage: {waveIndex}/{waveCount} finished. Waiting {timeBetweenWaves}sec");
+            if (waveIndex != waveCount) {
+                SetMessage($"Initializing next stage...");
+                //yield return new WaitForSeconds(timeBetweenWaves);
+                var waitTime = 0f;
+                while (waitTime < timeBetweenWaves) {
+                    waitTime += Time.deltaTime;
+                    SetProgress(waitTime/timeBetweenWaves*100);
+                    yield return null;
+                }
+                SetMessage($"executing...");
+            }
         }
         Debug.Log($"finish");
         conquerCoroutine = null;
@@ -168,20 +182,28 @@ public class GroundControl : MonoBehaviour
         zeusUI.style.display = DisplayStyle.None;
     }
 
-    public void DestroyZEUS(){
-        if (conquerCoroutine is null) return;
-        StopCoroutine(conquerCoroutine);
-        zeusAnimator.SetBool("isLanding", false);
-        zeusAnimator.SetBool("isPumping", false);
-        zeusAnimator.SetBool("isDestroyed", true);
-        StartCoroutine(ShakeCamera());
-        conquerCoroutine = null;
-        zeusAnimator = null;
-        zeus = null;
-        foreach (var plot in plots) {
-            plot.StopWaves();
-        }
-        zeusUI.style.display = DisplayStyle.None;
+    IEnumerator DestroyZEUS(){
+        if (conquerCoroutine is not null) {
+            StopCoroutine(conquerCoroutine);
+
+            zeusAnimator.SetBool("isLanding", false);
+            zeusAnimator.SetBool("isPumping", false);
+            zeusAnimator.SetBool("isDestroyed", true);
+            StartCoroutine(ShakeCamera(1.2f));
+            foreach (var plot in plots)
+                plot.StopWaves();
+
+            SetMessage("CRITICAL ERROR");
+            zeusUIBar.style.backgroundColor = new StyleColor(new Color(1f, .3f, .1f, .55f));
+            yield return new WaitForSeconds(2f);
+            SetMessage("Z.E.U.S. status: OFFLINE");
+            yield return new WaitForSeconds(2f);
+
+            conquerCoroutine = null;
+            zeusAnimator = null;
+            zeus = null;
+            zeusUI.style.display = DisplayStyle.None;
+        };
     }
 
     private IEnumerator conquerCoroutine = null;
@@ -196,7 +218,7 @@ public class GroundControl : MonoBehaviour
                 }
             }
         } else if (Input.GetMouseButtonDown(1)) {
-            DestroyZEUS();
+            StartCoroutine(DestroyZEUS());
         }
 
     }
