@@ -1179,7 +1179,7 @@ MonoBehaviour:
   waveDuratation: 15
   timeBetweenWaves: 5
   waveCount: 3
-  camera: {fileID: 1959661485}
+  downCamera: {fileID: 1959661485}
   zeusUIdoc: {fileID: 1078795574}
 --- !u!1001 &1665416316
 PrefabInstance:
