@@ -40,10 +40,18 @@ public class GameManager : MonoBehaviour
 
     public static void LoadScene(int levelNum = 0)
     {
-        if (Instance.levels.Length <= levelNum + 1)
+        if (Instance.levels.Length >= levelNum + 1)
         {
-            SceneManager.LoadScene(Instance.levels[0].name);
+            SceneManager.LoadScene(Instance.levels[levelNum].name);
         }
+    }
+
+    public static void LoadNextLevel()
+    {
+        int completedLevels = PlayerPrefs.GetInt("CompletedLevels", 0);
+        completedLevels++;
+        PlayerPrefs.SetInt("CompletedLevels", completedLevels);
+        LoadScene(completedLevels);
     }
 
     void Update()
@@ -51,6 +59,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().buildIndex != 0)
         {
             TogglePause();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N)) // Временное решение для перехода на следующий уровень
+        {
+            LoadNextLevel();
         }
     }
 
