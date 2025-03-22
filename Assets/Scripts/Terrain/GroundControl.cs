@@ -74,6 +74,7 @@ public class GroundControl : MonoBehaviour
 
     private GameObject zeus;
     private Animator zeusAnimator;
+    float maxRadius = 0f;
     IEnumerator LandZEUS(Vector3 point){
         zeusUI.style.display = DisplayStyle.Flex;
         zeusUIBar.style.backgroundColor = new StyleColor(new Color(1f, 1f, 1f, 1f));
@@ -89,7 +90,6 @@ public class GroundControl : MonoBehaviour
 
 
         var radiuses = new Dictionary<PlotControl, float>();
-        var maxRadius = 0f;
         foreach (var plot in plots) {
             var r = plot.HitPosition(point);
             radiuses[plot] = r;
@@ -118,8 +118,11 @@ public class GroundControl : MonoBehaviour
         Debug.Log($"Landing complete");
         SetMessage($"landing complete");
         yield return null;
+    }
 
-        //Запуск волн
+        IEnumerator ActivateZEUS()
+        {
+            //Запуск волн
         Debug.Log($"initialize G.A.I.A. protocol");
         SetMessage($"initialize G.A.I.A. protocol...");
         yield return new WaitForSeconds(1f);
@@ -180,11 +183,20 @@ public class GroundControl : MonoBehaviour
         zeus = null;
         zeusAnimator = null;
         zeusUI.style.display = DisplayStyle.None;
-    }
+        }
+
+        private IEnumerator activatingCoroutine = null;
+        public void Activate()
+        {
+            activatingCoroutine = ActivateZEUS();
+            StartCoroutine(activatingCoroutine);
+        }
 
     IEnumerator DestroyZEUS(){
         if (conquerCoroutine is not null) {
             StopCoroutine(conquerCoroutine);
+        if (activatingCoroutine is not null)
+            StopCoroutine(activatingCoroutine);
 
             zeusAnimator.SetBool("isLanding", false);
             zeusAnimator.SetBool("isPumping", false);

@@ -15,7 +15,7 @@ public class PenetratorInteraction : MonoBehaviour, IInteractable
             GameObject ground = GameObject.Find("ground_1");
             if (ground != null)
             {
-                StartCoroutine(ground.GetComponent<GroundControl>().ActivateZEUS()); // Вызов метода
+                ground.GetComponent<GroundControl>().Activate(); // Вызов метода
             }
             // gameObject.SetActive(false);
         }
