@@ -2019,6 +2019,8 @@ MonoBehaviour:
   pauseMenu: {fileID: 2095793439}
   levels:
   - {fileID: 102900000, guid: cf40b5c5b01567f4088c60340954b2d4, type: 3}
+  - {fileID: 102900000, guid: 272c3b8855e62324485e7a2eacb52787, type: 3}
+  - {fileID: 102900000, guid: 99c9720ab356a0642a771bea13969a05, type: 3}
 --- !u!4 &1157047386
 Transform:
   m_ObjectHideFlags: 0
