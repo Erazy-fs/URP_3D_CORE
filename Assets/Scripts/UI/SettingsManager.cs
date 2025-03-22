@@ -5,19 +5,28 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Rendering.FilterWindow;
 
 public class SettingsManager : MonoBehaviour
 {
-    //public Slider volumeSlider;
-    //public Toggle fullscreenToggle;
-    //public TMP_Dropdown resolutionDropdown;
+    public static SettingsManager Instance;
     [SerializeField]
     private List<Setting> _settings = new List<Setting>();
     private Dictionary<SettingType, Setting> _settingsByType;
     private event Action SelectablesSetValues;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
-    private void Start()
+    public void Load()
     {
         _settings.ForEach(s => s.Load());
         _settingsByType = _settings.ToDictionary(s => s.SettingType, s => s);
@@ -37,83 +46,29 @@ public class SettingsManager : MonoBehaviour
                     slider.onValueChanged.AddListener(_ => setting.Value = slider.value);
                     break;
                 case Toggle toggle:
-                    //StartCoroutine(DelayedListener(() => toggle.onValueChanged.AddListener(_ => PlayClickSound())));
+                    SelectablesSetValues += () => toggle.isOn = (bool)setting.Value;
+                    toggle.isOn = (bool)setting.Value;
+                    toggle.onValueChanged.AddListener(_ => setting.Value = toggle.isOn);
                     break;
                 case TMP_Dropdown dropdown:
-                    //StartCoroutine(DelayedListener(() => dropdown.onValueChanged.AddListener(_ => PlayClickSound())));
-                    //AddClickSoundToDropdown(dropdown);
+                    dropdown.ClearOptions();
+                    dropdown.AddOptions(setting.Options.Cast<string>().ToList());
+                    SelectablesSetValues += () => dropdown.value = (int)setting.Value;
+                    dropdown.value = (int)setting.Value;
+                    dropdown.onValueChanged.AddListener(_ => setting.Value = dropdown.value);
                     break;
             }
         }
     }
 
-
-    //private void Start()
-    //{
-    //    foreach (Selectable element in GetComponentsInChildren<Selectable>())
-    //    {
-    //        Setting setting = element.GetComponent<Setting>();
-    //        if (setting is not null)
-    //        {
-    //            _settings.Add(setting);
-    //            setting.Load();
-    //            switch (element)
-    //            {
-    //                case Button button:
-    //                    //button.onClick.AddListener(PlayClickSound);
-    //                    break;
-    //                case Slider slider:
-    //                    slider.value = (float)setting.Value;
-    //                    slider.onValueChanged.AddListener(_ => setting.Value = slider.value);
-    //                    //StartCoroutine(DelayedListener(() => slider.onValueChanged.AddListener(_ => PlayClickSound())));
-    //                    break;
-    //                case Toggle toggle:
-    //                    //StartCoroutine(DelayedListener(() => toggle.onValueChanged.AddListener(_ => PlayClickSound())));
-    //                    break;
-    //                case TMP_Dropdown dropdown:
-    //                    //StartCoroutine(DelayedListener(() => dropdown.onValueChanged.AddListener(_ => PlayClickSound())));
-    //                    //AddClickSoundToDropdown(dropdown);
-    //                    break;
-    //            }
-    //        }
-    //    }
-    //}
-
-    private void ApplySettings()
+    public static void SaveSettings()
     {
-        //AudioListener.volume = volumeSlider.value;
-        //Screen.fullScreen = fullscreenToggle.isOn;
-
-        //QualitySettings.SetQualityLevel(resolutionDropdown.value);
-
-        //SaveSettings();
+        Instance._settings.ForEach(s => s.Save());
     }
 
-    public void SaveSettings()
+    public static void CancelSettings()
     {
-        _settings.ForEach(s => s.Save());
-        //PlayerPrefs.SetFloat("MasterVolume", AudioListener.volume);
-        //PlayerPrefs.SetInt("Fullscreen", fullscreenToggle.isOn ? 1 : 0);
-        //PlayerPrefs.SetInt("QualityLevel", resolutionDropdown.value);
+        Instance._settings.ForEach(s => s.Cancel());
+        Instance.SelectablesSetValues?.Invoke();
     }
-
-    public void CancelSettings()
-    {
-        _settings.ForEach(s => s.Cancel());
-        SelectablesSetValues?.Invoke();
-    }
-
-    private void LoadSettings()
-    {
-        //volumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 0.7f);
-        //AudioListener.volume = volumeSlider.value;
-
-        //fullscreenToggle.isOn = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
-        //Screen.fullScreen = fullscreenToggle.isOn;
-
-
-        //resolutionDropdown.value = PlayerPrefs.GetInt("QualityLevel", 2);
-        //QualitySettings.SetQualityLevel(resolutionDropdown.value);
-    }
-
 }

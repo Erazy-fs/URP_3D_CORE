@@ -7,7 +7,10 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
-        player.Rotate(Vector3.up * mouseX);
+        if (Time.timeScale > 0)
+        {
+            float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
+            player.Rotate(Vector3.up * mouseX);
+        }
     }
 }

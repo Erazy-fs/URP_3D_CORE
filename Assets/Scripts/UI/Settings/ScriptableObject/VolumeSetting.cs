@@ -1,8 +1,6 @@
-using System;
 using UnityEngine;
-using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "VolumeSetting", menuName = "Settings/Volume Setting")]
+[CreateAssetMenu(fileName = "VolumeSetting", menuName = "Settings/Volume")]
 public class VolumeSetting : Setting
 {
     public override SettingType SettingType { get; set; } = SettingType.Volume;
@@ -15,8 +13,6 @@ public class VolumeSetting : Setting
 
     public override void Load()
     {
-        //volumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 0.7f);
-        //AudioListener.volume = volumeSlider.value;
         Value = PlayerPrefs.GetFloat("MasterVolume", 0.7f);
     }
 
@@ -29,10 +25,4 @@ public class VolumeSetting : Setting
     {
         Load();
     }
-
-    //public void OnChange(object value)
-    //{
-    //    //AudioListener.volume = volumeSlider.value;
-    //    AudioListener.volume = (float)value;
-    //}
 }

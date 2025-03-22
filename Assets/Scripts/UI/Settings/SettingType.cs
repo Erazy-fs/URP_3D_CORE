@@ -1,6 +1,7 @@
-using UnityEngine;
-
 public enum SettingType
 {
-    Volume
+    Volume,
+    Fullscreen,
+    Resolution,
+    VSync
 }
