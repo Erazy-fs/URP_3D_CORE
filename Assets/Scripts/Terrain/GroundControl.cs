@@ -141,8 +141,8 @@ public class GroundControl : MonoBehaviour
             int visualWavesCount = (int)Mathf.Ceil(waveDuratation / 3f)+1;   //Кол-во визуальных волн
             foreach (var plot in plots) {
                 Color.RGBToHSV(plot.startColor, out _, out var s, out var v);
-                var colorIndex = plot.colorIndex + 1; //new System.Random().Next(0, colorsCount);
-                if (colorIndex >= colorsCount) colorIndex = 0;
+                var colorIndex = plot.colorIndex + 4; //new System.Random().Next(0, colorsCount);
+                if (colorIndex >= colorsCount) colorIndex -= colorsCount;
                 var newColor = Color.HSVToRGB((float)colorIndex / colorsCount, s, v);
                 plot.StartWaves(newColor, visualWavesCount, colorIndex, 3, maxRadius);
                 if (plot.doWave)
