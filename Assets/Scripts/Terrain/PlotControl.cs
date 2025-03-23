@@ -39,11 +39,10 @@ public class PlotControl : MonoBehaviour {
 
         isFoilage = false;
         if (!doWave) {
-            if (transform.name == "leaves") {
-                baseFoilageScale = transform.localScale;
-                transform.localScale = Vector3.zero;
-                isFoilage = true;
-            }
+            gameObject.GetComponent<Renderer>().enabled = false;
+            baseFoilageScale = transform.localScale;
+            transform.localScale = Vector3.zero;
+            isFoilage = true;
         }
     }
     
@@ -137,13 +136,15 @@ public class PlotControl : MonoBehaviour {
                 }
                 return;
             }
+
+            if (!doWave && waveIndex == waveCount) gameObject.GetComponent<Renderer>().enabled = true;
         }
     
         if (isLastStage && !doWave && waveIndex == waveCount) {
             transform.localScale = new Vector3(
                 baseFoilageScale.x * timePercent,
                 baseFoilageScale.y * timePercent,
-                baseFoilageScale.z * timePercent
+                baseFoilageScale.z
             );
         }
 
