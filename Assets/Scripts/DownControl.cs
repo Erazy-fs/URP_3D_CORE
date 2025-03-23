@@ -46,16 +46,16 @@ public class DownControl : MonoBehaviour{
 
 
         //Z.E.U.S.
-        if (Input.GetKeyDown(KeyCode.F)){
+        // if (Input.GetKeyDown(KeyCode.F)){
 
-            if (Physics.Raycast(transform.position, Vector3.down, out var hit, 2)) {
-                var obj = hit.collider.gameObject;
-                Debug.Log("object: " + obj.name);
-                var plot = obj.GetComponent<PlotControl>();
-                if (plot is not null)
-                    groundControl.CallInZEUS(hit.point, plot.colorIndex);
-            } 
-        }
+        //     if (Physics.Raycast(transform.position, Vector3.down, out var hit, 2)) {
+        //         var obj = hit.collider.gameObject;
+        //         Debug.Log("object: " + obj.name);
+        //         var plot = obj.GetComponent<PlotControl>();
+        //         if (plot is not null)
+        //             groundControl.CallInZEUS(hit.point, plot.colorIndex);
+        //     } 
+        // }
     }
 
 }

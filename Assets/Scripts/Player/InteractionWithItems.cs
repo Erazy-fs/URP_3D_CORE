@@ -7,6 +7,8 @@ public class InteractionWithItems : MonoBehaviour
     public float interactionDistance = 5f;
     public GameObject interactionUI;
     public TextMeshProUGUI interactionText;
+    public GroundControl groundControl;
+
     void Update()
     {
         if (isActivated is false)
@@ -16,28 +18,42 @@ public class InteractionWithItems : MonoBehaviour
     bool isActivated = false;
     private void InteractionRay()
     {
-        Vector3 rayOrigin = playerTransform.position;
-        Vector3 rayDirection = playerTransform.forward;
-        RaycastHit hit;
-        bool hitSomething = false;
+        if (Input.GetKeyDown(KeyCode.F)){
 
-        if (Physics.Raycast(rayOrigin, rayDirection, out hit, interactionDistance))
+            if (Physics.Raycast(transform.position, Vector3.down, out var hit, 2)) {
+                var obj = hit.collider.gameObject;
+                Debug.Log("object: " + obj.name);
+                var plot = obj.GetComponent<PlotControl>();
+                if (plot is not null)
+                    groundControl.CallInZEUS(hit.point, plot.colorIndex);
+            } 
+        }
+        else
         {
-            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+            Vector3 rayOrigin = playerTransform.position;
+            Vector3 rayDirection = playerTransform.forward;
+            RaycastHit hit;
+            bool hitSomething = false;
 
-            if (interactable is not null)
+            if (Physics.Raycast(rayOrigin, rayDirection, out hit, interactionDistance))
             {
-                hitSomething = true;
-                interactionText.text = interactable.GetDescription();
+                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (interactable is not null)
                 {
-                    interactable.Interact();
-                    hitSomething = false;
-                    isActivated = true;
+                    hitSomething = true;
+                    interactionText.text = interactable.GetDescription();
+
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        interactable.Interact(KeyCode.E);
+                        hitSomething = false;
+                        isActivated = true;
+                    }
                 }
             }
+            interactionUI.SetActive(hitSomething);
         }
-        interactionUI.SetActive(hitSomething);
+
     }
 }

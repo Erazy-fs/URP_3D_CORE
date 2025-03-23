@@ -96,7 +96,9 @@ public class GroundControl : MonoBehaviour
         zeus.transform.position = new Vector3(point.x, point.y+100, point.z);
         zeusAnimator = zeus.GetComponentsInChildren<Animator>().First();
 
-
+        var zeusInteraction = zeus.GetComponentsInChildren<IInteractable>().First();
+        zeusInteraction.Interact(KeyCode.F);
+        
         var radiuses = new Dictionary<PlotControl, float>();
         currentPlotGroup = plotGroups[plotGroupIndex];
         foreach (var plot in currentPlotGroup) {
