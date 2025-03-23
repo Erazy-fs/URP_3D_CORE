@@ -25,6 +25,9 @@ public class PlotControl : MonoBehaviour {
     public Action OnReady;
     public bool isReady = false;
 
+    private bool isFoilage;
+    private Vector3 baseFoilageScale;
+
     void Start() {
         isUpdating = false;
         MeshFilter meshFilter = GetComponent<MeshFilter>();
@@ -33,6 +36,14 @@ public class PlotControl : MonoBehaviour {
         vertices = mesh.vertices;
         OnReady?.Invoke();
         isReady = true;
+
+        isFoilage = false;
+        if (!doWave) {
+            gameObject.GetComponent<Renderer>().enabled = false;
+            baseFoilageScale = transform.localScale;
+            transform.localScale = Vector3.zero;
+            isFoilage = true;
+        }
     }
     
     public void SetStartParams(Color color) {
@@ -65,13 +76,15 @@ public class PlotControl : MonoBehaviour {
     }
 
     private int lastIndex;
+    private bool isLastStage;
     private Color prevWaveColor;
-    public void StartWaves(Color color, int waves, int nextColorIndex, float duratation, float radius) {
+    public void StartWaves(Color color, int waves, int nextColorIndex, float duratation, float radius, bool lastStage = false) {
         nextColor      = color;
         waveCount      = waves;
         colorIndex     = nextColorIndex;
         waveDuratation = duratation;
         maxRadius      = radius;
+        isLastStage    = lastStage;
         waveIndex      = 1;
         elapsedTime    = 0;
         lastIndex      = 0;
@@ -102,14 +115,16 @@ public class PlotControl : MonoBehaviour {
 
         var newColors = mesh.colors;
 
-        float t = Mathf.Clamp01(elapsedTime / waveDuratation);
-        if (t >= 1) {   //Следующая волна
+
+        float timePercent = Mathf.Clamp01(elapsedTime / waveDuratation);
+        if (timePercent >= 1) {   //Следующая волна
             prevWaveColor = Color.Lerp(startColor, nextColor, (float)waveIndex/(float)waveCount);
             waveIndex++;
-            prevTime = 0;
+            prevTime    = 0;
             elapsedTime = 0;
             lastIndex   = 0;
-            t           = 0;
+            timePercent = 0;
+            
             if (waveIndex > waveCount) {
                 isUpdating = false;
                 startColor = nextColor;
@@ -121,11 +136,22 @@ public class PlotControl : MonoBehaviour {
                 }
                 return;
             }
+
+            if (!doWave && waveIndex == waveCount) gameObject.GetComponent<Renderer>().enabled = true;
         }
+    
+        if (isLastStage && !doWave && waveIndex == waveCount) {
+            transform.localScale = new Vector3(
+                baseFoilageScale.x * timePercent,
+                baseFoilageScale.y * timePercent,
+                baseFoilageScale.z
+            );
+        }
+
         var waveColor = Color.Lerp(startColor, nextColor, (float)waveIndex/(float)waveCount);
 
-        var waveStart = maxRadius * t;
-        var step      = maxRadius * .2f * t;
+        var waveStart = maxRadius * timePercent;
+        var step      = maxRadius * .2f * timePercent;
         var halfStep  = step*.5f;
         var waveEnd   = waveStart + step;
         int nextLastIndex = 0;
