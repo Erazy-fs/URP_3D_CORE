@@ -8,7 +8,7 @@ public class LevelManager : MonoBehaviour
     //public List<EnemyController> enemies; 
     private GameObject[] enemies;
     public float emeniesDelay = 0f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");

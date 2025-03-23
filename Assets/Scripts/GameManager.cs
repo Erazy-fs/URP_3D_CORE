@@ -1,4 +1,5 @@
-using UnityEditor;
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -8,8 +9,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public SettingsManager settingsManager;
     public GameObject pauseMenu;
+    public string[] levels;
     private bool isPaused = false;
-    public SceneAsset[] levels;
 
     private void Awake()
     {
@@ -38,12 +39,9 @@ public class GameManager : MonoBehaviour
         settingsManager.Load();
     }
 
-    public static void LoadScene(int levelNum = 0)
+    public static void ReloadCurrentLevel()
     {
-        if (Instance.levels.Length >= levelNum + 1)
-        {
-            SceneManager.LoadScene(Instance.levels[levelNum].name);
-        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public static void LoadNextLevel()
@@ -52,6 +50,14 @@ public class GameManager : MonoBehaviour
         completedLevels++;
         PlayerPrefs.SetInt("CompletedLevels", completedLevels);
         LoadScene(completedLevels);
+    }
+
+    public static void LoadScene(int levelNum = 0)
+    {
+        if (Instance.levels.Length >= levelNum + 1)
+        {
+            SceneManager.LoadScene(Instance.levels[levelNum]);
+        }
     }
 
     void Update()
