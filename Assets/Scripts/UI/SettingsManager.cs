@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
@@ -30,7 +31,7 @@ public class SettingsManager : MonoBehaviour
     {
         _settings.ForEach(s => s.Load());
         _settingsByType = _settings.ToDictionary(s => s.SettingType, s => s);
-        SettingInput[] settingInputs = FindObjectsByType<SettingInput>(FindObjectsSortMode.None);
+        SettingInput[] settingInputs = Resources.FindObjectsOfTypeAll<SettingInput>().Where(si => si.gameObject.scene.name == SceneManager.GetActiveScene().name).ToArray();
         foreach (SettingInput settingInput in settingInputs)
         {
             Setting setting = _settingsByType[settingInput.settingType];
