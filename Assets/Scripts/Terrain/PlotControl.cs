@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mono.Cecil.Cil;
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 public class PlotControl : MonoBehaviour {
@@ -28,15 +25,25 @@ public class PlotControl : MonoBehaviour {
     public Action OnReady;
     public bool isReady = false;
 
+    private bool isFoilage;
+    private Vector3 baseFoilageScale;
+
     void Start() {
         isUpdating = false;
         MeshFilter meshFilter = GetComponent<MeshFilter>();
         mesh = meshFilter.mesh;
-        Debug.Log($"{transform.parent.name} x{transform.parent.localScale.x} y{transform.parent.localScale.y} z{transform.parent.localScale.z}");
         waveHeight /= transform.parent.localScale.y;
         vertices = mesh.vertices;
         OnReady?.Invoke();
         isReady = true;
+
+        isFoilage = false;
+        if (!doWave) {
+            gameObject.GetComponent<Renderer>().enabled = false;
+            baseFoilageScale = transform.localScale;
+            transform.localScale = Vector3.zero;
+            isFoilage = true;
+        }
     }
     
     public void SetStartParams(Color color) {
@@ -69,19 +76,34 @@ public class PlotControl : MonoBehaviour {
     }
 
     private int lastIndex;
+    private bool isLastStage;
     private Color prevWaveColor;
-    public void StartWaves(Color color, int waves, int nextColorIndex, float duratation, float radius) {
+    public void StartWaves(Color color, int waves, int nextColorIndex, float duratation, float radius, bool lastStage = false) {
         nextColor      = color;
         waveCount      = waves;
         colorIndex     = nextColorIndex;
         waveDuratation = duratation;
         maxRadius      = radius;
+        isLastStage    = lastStage;
         waveIndex      = 1;
         elapsedTime    = 0;
         lastIndex      = 0;
         prevTime       = 0;
         prevWaveColor  = startColor;
         isUpdating     = true;
+    }
+
+    public void StopWaves(){
+        waveIndex      = 1;
+        elapsedTime    = 0;
+        lastIndex      = 0;
+        prevTime       = 0;
+        prevWaveColor  = startColor;
+        isUpdating     = false;
+        if (doWave) {
+            mesh.vertices = vertices;
+            mesh.RecalculateNormals();
+        }
     }
 
     private float prevTime;
@@ -93,14 +115,16 @@ public class PlotControl : MonoBehaviour {
 
         var newColors = mesh.colors;
 
-        float t = Mathf.Clamp01(elapsedTime / waveDuratation);
-        if (t >= 1) {   //Следующая волна
+
+        float timePercent = Mathf.Clamp01(elapsedTime / waveDuratation);
+        if (timePercent >= 1) {   //Следующая волна
             prevWaveColor = Color.Lerp(startColor, nextColor, (float)waveIndex/(float)waveCount);
             waveIndex++;
-            prevTime = 0;
+            prevTime    = 0;
             elapsedTime = 0;
             lastIndex   = 0;
-            t           = 0;
+            timePercent = 0;
+            
             if (waveIndex > waveCount) {
                 isUpdating = false;
                 startColor = nextColor;
@@ -112,11 +136,23 @@ public class PlotControl : MonoBehaviour {
                 }
                 return;
             }
+
+            if (!doWave && waveIndex == waveCount) gameObject.GetComponent<Renderer>().enabled = true;
         }
+    
+        if (isLastStage && !doWave && waveIndex == waveCount) {
+            transform.localScale = new Vector3(
+                baseFoilageScale.x * timePercent,
+                baseFoilageScale.y * timePercent,
+                baseFoilageScale.z
+            );
+        }
+
         var waveColor = Color.Lerp(startColor, nextColor, (float)waveIndex/(float)waveCount);
 
-        var waveStart = maxRadius * t;
-        var step      = maxRadius * Mathf.Max(.025f , .5f * t);
+        var waveStart = maxRadius * timePercent;
+        var step      = maxRadius * .2f * timePercent;
+        var halfStep  = step*.5f;
         var waveEnd   = waveStart + step;
         int nextLastIndex = 0;
 
@@ -131,11 +167,11 @@ public class PlotControl : MonoBehaviour {
             }
             else if (d <= waveEnd) {
                 var grad = Mathf.Clamp01(1 - (d - waveStart) / step);             //Градиент волны
-                var wave = Mathf.Clamp01(1 - Mathf.Abs(waveStart+step*.5f - d));  //Волна aAa
-                // var wave = Mathf.Abs(cur_radius+step*.5f - d);   //Обратная волна AaA
+                var wave = 1 - Mathf.Abs(waveStart+halfStep - d)/halfStep;  //Волна aAa
+                // var wave = Mathf.Abs(waveStart+step*.5f - d);   //Обратная волна AaA
                 
                 newColors[j] = Color.Lerp(prevWaveColor, waveColor, grad);              //Цвет
-                if (doWave) newVertices[j].y = vertices[j].y + waveHeight * wave;// * vertexNoise[j];  //Волна
+                if (doWave) newVertices[j].y = vertices[j].y + waveHeight * wave * vertexNoise[j];  //Волна
             } else break;
         }
         lastIndex = nextLastIndex;
