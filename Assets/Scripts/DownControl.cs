@@ -12,13 +12,16 @@ public class DownControl : MonoBehaviour{
     private bool isGrounded;
 
     private Animator animator;
-
+    private GunControl gun;
+    
 
     void Start() {
         controller = GetComponent<CharacterController>();
         animator   = GetComponent<Animator>();
+        gun        = GetComponentInChildren<GunControl>();
     }
 
+    private bool fireModeIsAuto = false;
     void Update() {
 
         isGrounded = controller.isGrounded;
@@ -38,8 +41,27 @@ public class DownControl : MonoBehaviour{
             animator.SetBool("isWalking", true);
         } else animator.SetBool("isWalking", false);
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y * gravityScale);
+        // if (Input.GetButtonDown("Jump") && isGrounded)
+        //     velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y * gravityScale);
+        // var t = Time.deltaTime;
+        // var currentFiring = animator.GetLayerWeight(1);
+        // if (Input.GetKey(KeyCode.Space)) 
+        //     animator.SetLayerWeight(1, Mathf.Clamp01(currentFiring+t+.1f));
+        // else 
+        //     animator.SetLayerWeight(1, Mathf.Clamp01(currentFiring-t+.05f));
+        if (Input.GetKeyDown(KeyCode.V)){
+            fireModeIsAuto = !fireModeIsAuto;
+            Debug.Log("mode: " + (fireModeIsAuto?"auto":"semi-auto"));
+        }
+
+        if (Input.GetKey(KeyCode.Space)) {
+            var wait = !animator.GetBool("isHolding");
+            animator.SetBool("isHolding", true);
+            gun.Shoot(wait, fireModeIsAuto);
+        } else {
+            animator.SetBool("isHolding", false);
+            gun.StopShooting();
+        }
 
         velocity.y += Physics.gravity.y * gravityScale * Time.deltaTime;
         controller.Move(new Vector3(0, velocity.y, 0) * Time.deltaTime);

@@ -44,6 +44,7 @@ public class PlotControl : MonoBehaviour {
             transform.localScale = Vector3.zero;
             isFoilage = true;
         }
+        SetStartParams(startColor);
     }
     
     public void SetStartParams(Color color) {
