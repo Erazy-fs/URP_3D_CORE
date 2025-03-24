@@ -83,6 +83,7 @@ public class GroundControl : MonoBehaviour
     private Animator zeusAnimator;
     float maxRadius = 0f;
     private List<PlotControl> currentPlotGroup = new();
+    private PenetratorInteraction penetratorInteraction;
     IEnumerator LandZEUS(Vector3 point, int plotGroupIndex){
         zeusUI.style.display = DisplayStyle.Flex;
         zeusUIBar.style.backgroundColor = new StyleColor(new Color(1f, 1f, 1f, .55f));
@@ -96,8 +97,8 @@ public class GroundControl : MonoBehaviour
         zeus.transform.position = new Vector3(point.x, point.y+100, point.z);
         zeusAnimator = zeus.GetComponentsInChildren<Animator>().First();
 
-        var zeusInteraction = zeus.GetComponentsInChildren<IInteractable>().First();
-        zeusInteraction.Interact(KeyCode.F);
+        penetratorInteraction = zeus.GetComponentsInChildren<IInteractable>().First() as PenetratorInteraction;
+        penetratorInteraction?.Interact(KeyCode.F);
         
         var radiuses = new Dictionary<PlotControl, float>();
         currentPlotGroup = plotGroups[plotGroupIndex];
@@ -201,9 +202,12 @@ public class GroundControl : MonoBehaviour
             }
         }
         Debug.Log($"finish");
+        penetratorInteraction.Disable();
         landingCoroutine = null;
-        zeus             = null;
-        zeusAnimator     = null;
+        activatingCoroutine = null;
+        zeus = null;
+        zeusAnimator = null;
+        penetratorInteraction = null;
         zeusUI.style.display = DisplayStyle.None;
     }
 
@@ -218,8 +222,11 @@ public class GroundControl : MonoBehaviour
         if (landingCoroutine is not null) {
             StopCoroutine(landingCoroutine);
 
-        if (activatingCoroutine is not null)
-            StopCoroutine(activatingCoroutine);
+            if (activatingCoroutine is not null)
+                StopCoroutine(activatingCoroutine);
+
+            if (penetratorInteraction is not null)
+                penetratorInteraction.isDestroyed = true;
 
             zeusAnimator.SetBool("isLanding", false);
             zeusAnimator.SetBool("isPumping", false);
@@ -237,8 +244,10 @@ public class GroundControl : MonoBehaviour
             yield return new WaitForSeconds(2f);
 
             landingCoroutine = null;
+            activatingCoroutine = null;
             zeusAnimator = null;
             zeus = null;
+            penetratorInteraction = null;
             zeusUI.style.display = DisplayStyle.None;
         };
     }

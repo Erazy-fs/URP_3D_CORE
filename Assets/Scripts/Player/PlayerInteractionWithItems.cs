@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class InteractionWithItems : MonoBehaviour
+public class PlayerInteractionWithItems : MonoBehaviour
 {
     public Transform playerTransform;
     public float interactionDistance = 5f;
@@ -11,7 +11,7 @@ public class InteractionWithItems : MonoBehaviour
 
     void Update()
     {
-        if (isActivated is false)
+        // if (isActivated is false)
             InteractionRay();
     }
 
