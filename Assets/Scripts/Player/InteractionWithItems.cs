@@ -38,6 +38,6 @@ public class InteractionWithItems : MonoBehaviour
                 }
             }
         }
-        interactionUI.SetActive(hitSomething);
+        interactionUI?.SetActive(hitSomething);
     }
 }
