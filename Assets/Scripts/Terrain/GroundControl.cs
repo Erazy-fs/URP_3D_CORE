@@ -122,7 +122,7 @@ public class GroundControl : MonoBehaviour
         zeus.transform.position = new Vector3(point.x, point.y-.2f, point.z);
 
         //Перенос отмена приземления
-        yield return new WaitForSeconds(2.45f);
+        yield return new WaitForSeconds(8.7f);
         StartCoroutine(ShakeCamera());
         zeusAnimator.SetBool("isLanding", false);
         
