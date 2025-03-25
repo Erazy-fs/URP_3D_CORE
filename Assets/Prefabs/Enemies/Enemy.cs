@@ -5,13 +5,15 @@ public class Enemy : MonoBehaviour
 {
     public Transform player;
     public float enemySpeed;
-    public string movingAnimationName;
+    public bool isRunner;
 
+    private string movingAnimationName;
     private NavMeshAgent agent;
     private Animator animator;
 
     protected virtual void Start()
     {
+        movingAnimationName = isRunner ? "Run" : "Walk";
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
