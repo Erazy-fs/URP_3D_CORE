@@ -75,7 +75,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1395189703230314720, guid: 485564eea1c975b4497b948ae96401c8, type: 3}
+  m_Motion: {fileID: 1395189703230314720, guid: 26a9c1064188db9419c5991a91400ccb, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -154,7 +154,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 9061338213343248790, guid: 485564eea1c975b4497b948ae96401c8, type: 3}
+  m_Motion: {fileID: 9061338213343248790, guid: 26a9c1064188db9419c5991a91400ccb, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -166,7 +166,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AlienAnimator
+  m_Name: MushroomKingAnimator
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Walk
@@ -222,7 +222,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -4592842328519117816, guid: 485564eea1c975b4497b948ae96401c8, type: 3}
+  m_Motion: {fileID: 4023202712368722038, guid: 26a9c1064188db9419c5991a91400ccb, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -274,7 +274,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -5599002979973759676, guid: 485564eea1c975b4497b948ae96401c8, type: 3}
+  m_Motion: {fileID: -5599002979973759676, guid: 26a9c1064188db9419c5991a91400ccb, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
