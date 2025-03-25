@@ -6,31 +6,35 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     //public List<Enemy> enemies;
-    public List<Wave> waves;
-    public List<Enemy> enemies;
-    public float emeniesDelay = 0f;
+    public List<EnemyWave> waves;
+    private int waveIndex = 0;
+    //public float emeniesDelay = 0f;
+
+    public void StartNextEnemyWave(List<SpawnPoint> spawnPoints)
+    {
+        waves[waveIndex++].StartEnemyWave(spawnPoints);
+    }
 
     void Start()
     {
         //enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        SetEnemiesActivity(false);
-        Invoke("ActivateEnemies", emeniesDelay);
+        //SetEnemiesActivity(false);
+        //Invoke("ActivateEnemies", emeniesDelay);
     }
 
-    void ActivateEnemies()
-    {
-        SetEnemiesActivity(true);
-    }
+    //void ActivateEnemies()
+    //{
+    //    SetEnemiesActivity(true);
+    //}
 
-    void SetEnemiesActivity(bool active = true)
-    {
-        foreach (Enemy enemy in enemies)
-        {
-            enemy.gameObject.SetActive(active);
-        }
-    }
+    //void SetEnemiesActivity(bool active = true)
+    //{
+    //    foreach (Enemy enemy in enemies)
+    //    {
+    //        enemy.gameObject.SetActive(active);
+    //    }
+    //}
 
-    // Update is called once per frame
     void Update()
     {
         

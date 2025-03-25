@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Wave : MonoBehaviour
+public class SpawnPoint : MonoBehaviour
 {
-    public List<Enemy> enemies;
-
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
