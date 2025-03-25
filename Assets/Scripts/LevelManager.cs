@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    //public List<EnemyController> enemies; 
-    private GameObject[] enemies;
+    //public List<Enemy> enemies;
+    public List<Wave> waves;
+    public List<Enemy> enemies;
     public float emeniesDelay = 0f;
 
     void Start()
     {
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        //enemies = GameObject.FindGameObjectsWithTag("Enemy");
         SetEnemiesActivity(false);
         Invoke("ActivateEnemies", emeniesDelay);
     }
@@ -23,9 +24,9 @@ public class LevelManager : MonoBehaviour
 
     void SetEnemiesActivity(bool active = true)
     {
-        foreach (GameObject enemy in enemies)
+        foreach (Enemy enemy in enemies)
         {
-            enemy.SetActive(active);
+            enemy.gameObject.SetActive(active);
         }
     }
 
