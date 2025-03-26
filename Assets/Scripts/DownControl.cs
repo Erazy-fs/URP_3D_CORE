@@ -70,7 +70,8 @@ public class DownControl : MonoBehaviour{
         //Z.E.U.S.
         if (Input.GetKeyDown(KeyCode.F)){
 
-            if (Physics.Raycast(transform.position, Vector3.down, out var hit, 2)) {
+               Debug.Log("F");
+            if (Physics.Raycast(transform.position, Vector3.down, out var hit, 3)) {
                 var obj = hit.collider.gameObject;
                 Debug.Log("object: " + obj.name);
                 var plot = obj.GetComponent<PlotControl>();
