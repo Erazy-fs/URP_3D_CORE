@@ -156,6 +156,9 @@ public class GroundControl : MonoBehaviour
             zeusAnimator.SetBool("isPumping", true);
             yield return new WaitForSeconds(2.9f); //Подъем перед ударом
 
+            //Запуск волны врагов
+            StartEnemyWave();
+
             //Запуск ударов
             int visualWavesCount = (int)Mathf.Ceil(waveDuratation / 3f)+1;   //Кол-во визуальных волн
             foreach (var plot in currentPlotGroup) {
@@ -203,6 +206,13 @@ public class GroundControl : MonoBehaviour
         zeus             = null;
         zeusAnimator     = null;
         zeusUI.style.display = DisplayStyle.None;
+    }
+
+    void StartEnemyWave()
+    {
+        List<SpawnPoint> spawnPoints = currentPlotGroup.SelectMany(p => p.GetComponentsInChildren<SpawnPoint>()).ToList();
+        spawnPoints.ForEach(sp => sp.SetTarget(zeusAnimator.transform));
+        LevelManager.StartNextEnemyWave(spawnPoints);
     }
 
     private IEnumerator activatingCoroutine = null;
