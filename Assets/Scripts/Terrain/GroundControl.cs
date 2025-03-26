@@ -53,13 +53,13 @@ public class GroundControl : MonoBehaviour
         }
     }
 
-    IEnumerator ShakeCamera(float shakeForce = .7f) {
-        for(int i=0; i<5; i++){
+    IEnumerator ShakeCamera(float shakeForce) {
+        for(int i=0; i<7; i++){
             i++;
             downCamera.transform.position = new Vector3(
-                downCamera.transform.position.x + UnityEngine.Random.Range(0f, shakeForce),
-                downCamera.transform.position.y + UnityEngine.Random.Range(0f, shakeForce),
-                downCamera.transform.position.z + UnityEngine.Random.Range(0f, shakeForce)
+                downCamera.transform.position.x + UnityEngine.Random.Range(.5f, shakeForce),
+                downCamera.transform.position.y + UnityEngine.Random.Range(.5f, shakeForce),
+                downCamera.transform.position.z + UnityEngine.Random.Range(.5f, shakeForce)
             );
             yield return new WaitForSeconds(.1f);
         }
@@ -121,9 +121,9 @@ public class GroundControl : MonoBehaviour
         Debug.Log($"Landing...");
         zeus.transform.position = new Vector3(point.x, point.y-.2f, point.z);
 
-        //Перенос отмена приземления
-        yield return new WaitForSeconds(8.7f);
-        StartCoroutine(ShakeCamera());
+        //Завершение приземления
+        yield return new WaitForSeconds(7.8f);
+        StartCoroutine(ShakeCamera(2));
         zeusAnimator.SetBool("isLanding", false);
         
         // SetMessage($"landing complete");
@@ -232,7 +232,7 @@ public class GroundControl : MonoBehaviour
             zeusAnimator.SetBool("isLanding", false);
             zeusAnimator.SetBool("isPumping", false);
             zeusAnimator.SetBool("isDestroyed", true);
-            StartCoroutine(ShakeCamera(1.2f));
+            StartCoroutine(ShakeCamera(3f));
             foreach (var plot in currentPlotGroup)
                 plot.StopWaves();
 
@@ -267,7 +267,7 @@ public class GroundControl : MonoBehaviour
             //         StartCoroutine(landingCoroutine);
             //     }
             // }
-        } else if (Input.GetMouseButtonDown(1)) {
+        } else if (Input.GetMouseButtonDown(2)) {
             StartCoroutine(DestroyZEUS());
         }
 

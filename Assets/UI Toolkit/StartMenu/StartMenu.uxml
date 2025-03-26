@@ -1,0 +1,8 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/StartMenu/StartMenuStyles.uss?fileID=7433441132597879392&amp;guid=0665c363a70b51e4598d45bbac3ca6fa&amp;type=3#StartMenuStyles" />
+    <engine:VisualElement style="flex-grow: 0; width: 33%; height: 100%; align-items: center; justify-content: flex-start;">
+        <engine:Button text="начать игру" name="buttonStart" class="menu_button" style="margin-top: 35px;" />
+        <engine:Button text="настройки" name="buttonSettings" class="menu_button" />
+        <engine:Button text="выход" name="buttonExit" class="menu_button" />
+    </engine:VisualElement>
+</engine:UXML>
