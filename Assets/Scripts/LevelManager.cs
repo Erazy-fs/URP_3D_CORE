@@ -2,42 +2,50 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    //public List<Enemy> enemies;
+    public static LevelManager Instance;
     public List<EnemyWave> waves;
     private int waveIndex = 0;
-    //public float emeniesDelay = 0f;
 
-    public void StartNextEnemyWave(List<SpawnPoint> spawnPoints)
+    // TEMP
+    //public GameObject spawnPointsGameObject;
+    //private List<SpawnPoint> spawnPoints;
+    // TEMP
+
+    private void Awake()
     {
-        waves[waveIndex++].StartEnemyWave(spawnPoints);
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    void Start()
+    public static void StartNextEnemyWave(List<SpawnPoint> spawnPoints)
     {
-        //enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        //SetEnemiesActivity(false);
-        //Invoke("ActivateEnemies", emeniesDelay);
+        if (Instance.waveIndex < Instance.waves.Count)
+        {
+            Instance.waves[Instance.waveIndex++].StartEnemyWave(spawnPoints);
+        }
     }
 
-    //void ActivateEnemies()
-    //{
-    //    SetEnemiesActivity(true);
-    //}
-
-    //void SetEnemiesActivity(bool active = true)
-    //{
-    //    foreach (Enemy enemy in enemies)
-    //    {
-    //        enemy.gameObject.SetActive(active);
-    //    }
-    //}
-
-    void Update()
-    {
-        
-    }
+//    private void Update()
+//    {
+//#if UNITY_EDITOR
+//        if (Input.GetKeyDown(KeyCode.T))
+//        {
+//            GameObject zeusObject = GameObject.FindGameObjectWithTag("Zeus");
+//            spawnPoints = spawnPointsGameObject.GetComponentsInChildren<SpawnPoint>().ToList();
+//            spawnPoints.ForEach(sp => sp.SetTarget(zeusObject.transform));
+//            LevelManager.StartNextEnemyWave(spawnPoints);
+//        }
+//#endif
+//    }
 
 }
