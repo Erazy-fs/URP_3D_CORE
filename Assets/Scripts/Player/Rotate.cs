@@ -2,43 +2,51 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
-    public float Amount = 1;
-    public float Speed = 1;
-    public float SensVert = 9;
+    public float speedScrollCamera = 1;
+    public Transform targetObj;
+    public Transform weapon;
+    private float mouseSens = 4f;
+    private float smooth = 2f;
+    private float minimumY = -90f;
+    private float maximumY = 360f;
+    private float minimumX = -90f;
+    private float maximumX = 180f;
+    private float minimumZ = -90f;
+    private float maximumZ = 90f;
+    private Transform character;
+    private Vector2 currentMouseLook; 
+    private Vector2 appliedMouseDelta;
+    private float rotationX = 1;
+    private float rotationY = 1;
+    private float cameraPositionZ = 1;
+    private float tmpPositionY = 2;
+    private Vector3 tempPositionBot;
 
-    public float MinVert = -45;
-    public float MaxVert = 45;
-
-
-    Vector3 startPos;
-    float distantion = 0;
-    float rotationX = 0;
-    Vector3 rotation = Vector3.zero;
-
-    public Transform playerBody;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        //startPos = transform.position;
-        //Debug.Log(transform);
+        character = GameObject.FindGameObjectWithTag("Player").transform;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        //rotationX -= Input.GetAxis("Mouse X") * SensVert;
-        //rotationX = Mathf.Clamp(rotationX, MinVert, MaxVert);
+        rotationX += (Input.GetAxis("Mouse X") * (mouseSens));
+        rotationY -= (Input.GetAxis("Mouse Y") * (mouseSens));
+        cameraPositionZ = Mathf.Clamp(cameraPositionZ + (Input.GetAxis("Mouse ScrollWheel") * speedScrollCamera), minimumZ, maximumZ);
 
-        //distantion -= (transform.position - startPos).magnitude;
-        //startPos = transform.position;
-        //rotation.z = Mathf.Sin(distantion * Speed) * Amount;
-        //transform.localEulerAngles = new Vector3(rotation.x, transform.localEulerAngles.y, rotation.z);
-        float mouseX = Input.GetAxis("Mouse X") * SensVert * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * SensVert * Time.deltaTime;
+        rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
+        tempPositionBot = new Vector3(targetObj.transform.position.x,
+            targetObj.transform.position.y + tmpPositionY,
+            targetObj.transform.position.z);
 
-        rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-        transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
+        float tmpPositionZ = cameraPositionZ * 0.1f;
+
+        var newRotation = Quaternion.Euler(rotationY, rotationX, 0f);
+        var newPosition = newRotation * new Vector3(0f, 0f, tmpPositionZ) + tempPositionBot;
+
+        transform.rotation = newRotation;
+        transform.position = newPosition;
+        //weapon.rotation = newRotation;
     }
 }
