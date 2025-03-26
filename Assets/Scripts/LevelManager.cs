@@ -29,9 +29,12 @@ public class LevelManager : MonoBehaviour
 
     public static void StartNextEnemyWave(List<SpawnPoint> spawnPoints)
     {
-        if (Instance.waveIndex < Instance.waves.Count)
+        if (Instance != null)
         {
-            Instance.waves[Instance.waveIndex++].StartEnemyWave(spawnPoints);
+            if (Instance.waveIndex < Instance.waves.Count)
+            {
+                Instance.waves[Instance.waveIndex++].StartEnemyWave(spawnPoints);
+            }
         }
     }
 
