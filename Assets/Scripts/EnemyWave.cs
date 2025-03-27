@@ -7,13 +7,12 @@ public class EnemyWave : MonoBehaviour
 
     public void StartEnemyWave(List<SpawnPoint> spawnPoints)
     {
-        foreach (Enemy enemy in enemies)
+        if (spawnPoints.Count > 0)
         {
-            // Анимация спавна?
-            // Спавн врагов в направлении игрока/пенетратора
-            // 
-            // 
-            Instantiate(enemy, spawnPoints[Random.Range(0, spawnPoints.Count)].transform);
+            foreach (Enemy enemy in enemies)
+            {
+                spawnPoints[Random.Range(0, spawnPoints.Count)].SpawnEnemy(enemy);
+            }
         }
     }
 
