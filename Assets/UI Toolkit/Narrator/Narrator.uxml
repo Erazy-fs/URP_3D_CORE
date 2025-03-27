@@ -1,0 +1,22 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Narrator/narrator_style.uss?fileID=7433441132597879392&amp;guid=27a3090fa54e05947be91acf39be168b&amp;type=3#narrator_style" />
+    <engine:VisualElement name="narratorVIew" style="flex-grow: 1;">
+        <engine:VisualElement name="blackScreen" style="flex-grow: 1; transition-delay: 0s; background-color: rgb(23, 23, 23); align-items: center; justify-content: center; transition-duration: 0.5s;">
+            <engine:VisualElement name="blackScreenTextBox" style="flex-grow: 0; align-items: center; justify-content: center; width: 50%; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgba(255, 255, 255, 0.55); border-right-color: rgba(255, 255, 255, 0.55); border-top-color: rgba(255, 255, 255, 0.55); border-bottom-color: rgba(255, 255, 255, 0.55); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 10px; padding-bottom: 5px; padding-left: 10px; transition-delay: 0s; transition-duration: 1.5s;">
+                <engine:Label text="Реа́кция (от лат. re… «против» + actio «действие») — действие, возникающее в ответ на какое-либо воздействие." name="blackScreenText" style="color: rgb(255, 255, 255); font-size: 18px; white-space: normal; -unity-text-align: upper-left;" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement name="mainView" style="flex-grow: 1; visibility: visible; flex-direction: row; align-items: stretch; justify-content: flex-start;">
+            <engine:VisualElement name="tasksBox" style="flex-grow: 0; width: 70%; height: 100%; padding-top: 55px; padding-right: 0; padding-bottom: 10px; padding-left: 20px; align-items: flex-start;">
+                <engine:Label text="# Нажмите [W]" style="font-size: 16px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 2px; padding-right: 6px; padding-bottom: 2px; padding-left: 6px; color: rgb(255, 255, 255); -unity-font-style: normal; -unity-text-align: upper-left; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); max-width: none; flex-shrink: 0;" />
+                <engine:Label text="# Нажмите [A]&#10;" class="task_text" />
+            </engine:VisualElement>
+            <engine:VisualElement name="tutorialBox" style="flex-grow: 0; position: relative; right: auto; width: 35%; height: auto; padding-top: 55px; padding-right: 20px; padding-bottom: 50px; padding-left: 20px; max-width: none;">
+                <engine:Label text="tutorial" name="tutorialText" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; color: rgb(255, 255, 255); font-size: 15px; white-space: normal;" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement name="bottomTextBox" style="flex-grow: 0; height: auto; position: absolute; width: 100%; bottom: 15px; max-width: none; align-self: center; justify-content: flex-start; align-items: center;">
+            <engine:Label text=" lmao bottom text lmao bottom text lmao bottom text lmao bottom text lmao bottom text lmao bottom text lmao bottom text lmao bottom text" name="bottomText" style="-unity-text-align: middle-center; font-size: 16px; color: rgb(255, 255, 255); white-space: normal; position: relative; bottom: auto; max-height: 350px; max-width: 800px;" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>
