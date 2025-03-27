@@ -18,6 +18,12 @@ public class TopDownControl : MonoBehaviour{
     private GunControl gun;
     private Rigidbody rigitbody;
 
+    public bool canMove = true;
+    public bool canShoot = true;
+    public bool canCallZEUS = true;
+
+    public LevelNarrator narrator;
+
     void Start() {
         controller = GetComponent<CharacterController>();
         animator   = GetComponent<Animator>();
@@ -27,19 +33,24 @@ public class TopDownControl : MonoBehaviour{
 
     private bool fireModeIsAuto = false;
     void Update() {
-        if (!GameManager.IsPaused()) {
-            isGrounded = controller.isGrounded;
 
-            if (isGrounded && velocity.y < 0) 
-                velocity.y = -2f;
+        if (transform.position.y < -1) {
+            narrator.PlayerDeath();
+        }
+        isGrounded = controller.isGrounded;
 
+        if (isGrounded && velocity.y < 0) 
+            velocity.y = -2f;
+
+        var leftButton  = Input.GetMouseButton(0);
+        var rightButton = Input.GetMouseButton(1);
+
+        if (canMove) {
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical   = Input.GetAxis("Vertical");
 
             var move = new Vector3(moveHorizontal, 0, moveVertical);
 
-            var leftButton  = Input.GetMouseButton(0);
-            var rightButton = Input.GetMouseButton(1);
             if (move != Vector3.zero) {
                 if (leftButton || rightButton) {
                     controller.Move(move * moveSpeed * Time.deltaTime);
@@ -51,29 +62,12 @@ public class TopDownControl : MonoBehaviour{
                 animator.SetBool("isWalking", true);
             } else animator.SetBool("isWalking", false);
 
-
-            // if (Input.GetMouseButtonDown(0)) {  //ЛКМ
-            //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //     if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider != null) {
-            //         Shoot(hit.point);
-            //     }
-            // }
-
             if (Input.GetButtonDown("Jump") && isGrounded)
                 velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y * gravityScale);
+        } else LookAtMouse();
 
 
-            // var t = Time.deltaTime;
-            // var currentFiring = animator.GetLayerWeight(1);
-            // if (Input.GetKey(KeyCode.Space)) 
-            //     animator.SetLayerWeight(1, Mathf.Clamp01(currentFiring+t+.1f));
-            // else 
-            //     animator.SetLayerWeight(1, Mathf.Clamp01(currentFiring-t+.05f));
-            // if (Input.GetKeyDown(KeyCode.V)){
-            //     fireModeIsAuto = !fireModeIsAuto;
-            //     Debug.Log("mode: " + (fireModeIsAuto?"auto":"semi-auto"));
-            // }
-
+        if (canShoot) {
             if (leftButton || rightButton) {
                 LookAtMouse();
                 var wait = !animator.GetBool("isHolding");
@@ -83,18 +77,21 @@ public class TopDownControl : MonoBehaviour{
                 animator.SetBool("isHolding", false);
                 gun.StopShooting();
             }
+        }
 
-            velocity.y += Physics.gravity.y * gravityScale * Time.deltaTime;
-            controller.Move(new Vector3(0, velocity.y, 0) * Time.deltaTime);
+        velocity.y += Physics.gravity.y * gravityScale * Time.deltaTime;
+        controller.Move(new Vector3(0, velocity.y, 0) * Time.deltaTime);
 
 
-            //Z.E.U.S.
+        //Z.E.U.S.
+        if (canCallZEUS) {
             if (Input.GetKeyDown(KeyCode.F)){
                 if (Physics.Raycast(transform.position, Vector3.down, out var hit, 3)) {
                     var obj = hit.collider.gameObject;
                     var plot = obj.GetComponent<PlotControl>();
                     if (plot is not null)
-                        groundControl.CallInZEUS(hit.point, plot.colorIndex);
+                        if (!plot.isComplete)
+                            groundControl.CallInZEUS(hit.point, plot.colorIndex);
                 } 
             }
         }

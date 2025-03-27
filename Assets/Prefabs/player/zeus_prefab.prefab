@@ -449,6 +449,7 @@ MonoBehaviour:
   landingSound: {fileID: 8300000, guid: e51b911af24499640951ca82bd92d545, type: 3}
   pumpUpSound: {fileID: 8300000, guid: 09aab44945567d647b741af0263dde9d, type: 3}
   pumpDownSound: {fileID: 8300000, guid: 2efc4f8ad59618c4585157fc47549416, type: 3}
+  destroyingSound: {fileID: 8300000, guid: f79e34f0f369b3643a5e9a93abc1fadb, type: 3}
 --- !u!1 &9071401766206896427
 GameObject:
   m_ObjectHideFlags: 0

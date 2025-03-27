@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 public class GroundControl : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-
+    public LevelNarrator narrator;
     public int colorsCount = 12;
     public GameObject zeusPrefab;
 
@@ -90,6 +90,7 @@ public class GroundControl : MonoBehaviour
         SetMessage($"вызов Z.E.U.S");
         SetWaveMessage("");
         SetProgress(0f);
+        narrator.ZeusCall();
 
         //spawn zeus
         zeus = Instantiate(zeusPrefab);
@@ -132,10 +133,12 @@ public class GroundControl : MonoBehaviour
         yield return new WaitForSeconds(2f);
         SetMessage($"ожидание активации Z.E.U.S.");
 
+        narrator.ZeusLand();
         yield return null;
     }
 
     IEnumerator ActivateZEUS() {
+        narrator.ZeusActivate();
         //Запуск волн
         // SetMessage($"initialize G.A.I.A. protocol...");
         SetMessage($"инициализация протокола G.A.I.A....");
@@ -147,6 +150,7 @@ public class GroundControl : MonoBehaviour
         int waveIndex = 0;
         while (waveIndex < waveCount) {
             waveIndex++;
+            narrator.StageStart(waveIndex, waveCount);
             Debug.Log($"wave: {waveIndex}/{waveCount} ({waveDuratation}sec)");
 
             // SetWaveMessage($"'stage': {waveIndex}/{waveCount}");
@@ -176,7 +180,9 @@ public class GroundControl : MonoBehaviour
             var executeTime = 0f;
             while (executeTime < waveDuratation) {
                 executeTime += Time.deltaTime;
-                SetProgress(executeTime/waveDuratation*100);
+                var progress = executeTime/waveDuratation*100;
+                SetProgress(progress);
+                narrator.StageProgress(progress, waveIndex, waveCount);
                 yield return null;
             }
 
@@ -199,8 +205,23 @@ public class GroundControl : MonoBehaviour
 
                 // SetMessage($"executing...");
                 SetMessage($"выполнение этапа...");
-            }
+            }            
+            narrator.StageEnd(waveIndex, waveCount);
         }
+        foreach (var plot in currentPlotGroup) {
+            plot.isComplete = true;
+        }
+        
+        var countComplete = 0;
+        foreach(var plot in plots){
+            if (plot.isComplete) countComplete++;
+        }
+        narrator.ZoneComplete(countComplete, plots.Length);
+
+        if (countComplete == plots.Length) {
+            narrator.LevelComplete();
+        }
+
         Debug.Log($"finish");
         landingCoroutine = null;
         zeus             = null;
@@ -248,6 +269,7 @@ public class GroundControl : MonoBehaviour
             zeusAnimator = null;
             zeus = null;
             zeusUI.style.display = DisplayStyle.None;
+            narrator.ZeusDestroy();
         };
     }
 

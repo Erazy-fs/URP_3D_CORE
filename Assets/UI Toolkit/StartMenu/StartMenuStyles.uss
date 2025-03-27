@@ -13,6 +13,7 @@
     transition: 0.2s;
     margin-bottom: 10px;
     transition-timing-function: ease-out;
+    background-size: 100% 100%;
 }
 
 .menu_button:hover {
