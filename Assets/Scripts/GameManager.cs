@@ -7,8 +7,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public static bool gameIsStarted = false;
     public SettingsManager settingsManager;
-    public GameObject pauseMenu;
+    public PauseMenu pauseMenu;
     public string[] levels;
     private bool isPaused = false;
 
@@ -18,7 +19,8 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            DontDestroyOnLoad(pauseMenu);
+            DontDestroyOnLoad(pauseMenu.gameObject);
+            Debug.Log($"pauseMenu == null: {pauseMenu == null}");
             SceneManager.sceneLoaded += PrepareScene;
         }
         else
@@ -37,6 +39,23 @@ public class GameManager : MonoBehaviour
             eventSystem.AddComponent<StandaloneInputModule>();
         }
         settingsManager.Load();
+        //settingsManager.SetUIEvents();
+    }
+
+    public static void StartGame()
+    {
+        gameIsStarted = true;
+        try
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            InteractionWithItems interactionWithItems = player.GetComponent<InteractionWithItems>();
+            TopDownControl topDownControl = player.GetComponent<TopDownControl>();
+            interactionWithItems.enabled = true;
+            topDownControl.enabled = true;
+        }
+        catch (Exception)
+        {
+        }
     }
 
     public static void ReloadCurrentLevel()
@@ -62,7 +81,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().buildIndex != 0)
+        if (Input.GetKeyDown(KeyCode.Escape) && (gameIsStarted || SceneManager.GetActiveScene().buildIndex != 0))
         {
             TogglePause();
         }
@@ -73,16 +92,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void TogglePause()
+    public static void TogglePause()
     {
-        isPaused = !isPaused;
-        pauseMenu?.SetActive(isPaused);
-        Time.timeScale = isPaused ? 0f : 1f;
+        Instance.isPaused = !Instance.isPaused;
+        Instance.pauseMenu?.SetVisible(Instance.isPaused);
+        Time.timeScale = Instance.isPaused ? 0f : 1f;
     }
 
-    public void QuitToMainMenu()
+    public static void QuitToMainMenu()
     {
         TogglePause();
+        gameIsStarted = false;
         SceneManager.LoadScene(0);
+    }
+
+    public static bool IsPaused()
+    {
+        return Instance?.isPaused ?? false;
     }
 }

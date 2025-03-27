@@ -27,10 +27,23 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public static void SetSettingValue(SettingType settingType, float value)
+    {
+        Instance._settingsByType[settingType].Value = value;
+    }
+    public static object GetSettingValue(SettingType settingType)
+    {
+        return Instance._settingsByType[settingType].Value;
+    }
+
     public void Load()
     {
         _settings.ForEach(s => s.Load());
         _settingsByType = _settings.ToDictionary(s => s.SettingType, s => s);
+    }
+
+    public void SetUIEvents()
+    {
         SettingInput[] settingInputs = Resources.FindObjectsOfTypeAll<SettingInput>().Where(si => si.gameObject.scene.name == SceneManager.GetActiveScene().name).ToArray();
         foreach (SettingInput settingInput in settingInputs)
         {
