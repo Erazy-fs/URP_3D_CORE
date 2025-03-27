@@ -6,6 +6,7 @@ public class PenetratorSounds : MonoBehaviour
     public AudioClip landingSound;
     public AudioClip pumpUpSound;
     public AudioClip pumpDownSound;
+    public AudioClip destroyingSound;
 
     void Start()
     {
@@ -25,5 +26,10 @@ public class PenetratorSounds : MonoBehaviour
     public void PlayPumpDownSound()
     {
         audioSource.PlayOneShot(pumpDownSound);
+    }
+
+    public void PlayDestroyingSound()
+    {
+        audioSource.PlayOneShot(destroyingSound);
     }
 }
