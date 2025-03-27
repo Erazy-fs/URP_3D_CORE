@@ -7,7 +7,7 @@ public class PlotControl : MonoBehaviour {
     public  int colorIndex;
     public  float waveDuratation;
     public  int waveCount;
-    public  float waveHeight = .05f;
+    public  float waveHeight = 4f;
     public  Color startColor = Color.red;
     private Color nextColor  = new(0, 0, 255);
     public  bool doWave      = true;
@@ -25,7 +25,6 @@ public class PlotControl : MonoBehaviour {
     public Action OnReady;
     public bool isReady = false;
 
-    private bool isFoilage;
     private Vector3 baseFoilageScale;
 
     void Start() {
@@ -37,13 +36,12 @@ public class PlotControl : MonoBehaviour {
         OnReady?.Invoke();
         isReady = true;
 
-        isFoilage = false;
         if (!doWave) {
             gameObject.GetComponent<Renderer>().enabled = false;
             baseFoilageScale = transform.localScale;
             transform.localScale = Vector3.zero;
-            isFoilage = true;
         }
+        SetStartParams(startColor);
     }
     
     public void SetStartParams(Color color) {
