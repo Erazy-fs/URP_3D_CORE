@@ -222,12 +222,19 @@ public class GroundControl : MonoBehaviour
         }
         
         var countComplete = 0;
+        var plotCount = 0;
         foreach(var plot in plots){
-            if (plot.isComplete) countComplete++;
+            if (plot.doWave) {
+                plotCount++;
+                if (plot.isComplete) {
+                    countComplete++;
+                }
+                
+            }
         }
-        narrator.ZoneComplete(countComplete, plots.Length);
+        narrator.ZoneComplete(countComplete, plotCount);
 
-        if (countComplete == plots.Length) {
+        if (countComplete == plotCount) {
             narrator.LevelComplete();
         }
 

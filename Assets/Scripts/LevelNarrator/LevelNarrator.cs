@@ -37,6 +37,7 @@ public class LevelNarrator : MonoBehaviour {
         tasksBox           = narratorUI.Q<VisualElement>("tasksBox");
         tasksBox.Clear();
 
+        tutorialText.text = "";
         HideElement(blackScreenTextBox);
         ShowBlackScreen();
         SetBlackScreenMessage("");
@@ -100,28 +101,79 @@ public class LevelNarrator : MonoBehaviour {
         blackScreenText.text = message;
     }
 
+
+    IEnumerator WaitCoroutine(float delay, Action action){
+        yield return new WaitForSeconds(delay);
+        action();
+    }
+
     private void RESTART_SCENE(){
         StopCoroutine(narratorCoroutine);
         ShowBlackScreen();
-        Debug.Log("ВЫЗВАТЬ РЕСТАРТ!!!");
+        StartCoroutine(WaitCoroutine(4, ()=>{GameManager.ReloadCurrentLevel();}));
     }
 
     IEnumerator BasicScene(){
-        OnStart = () => {
-            Debug.Log("Начало уровня");
+        OnPlayerDeath = ()=>{
+            ShowBlackScreen();
+            SetBlackScreenMessage("УМЕР");
+            RESTART_SCENE();
         };
-        OnZeusCall = () => {
-            Debug.Log("ZEUS Вызван");
-        };
+
+        var ZEUScalled = false;
+        OnZeusCall = () => {ZEUScalled = true;};
+
+        var ZEUSdestroyed = false;
+        OnZeusDestroy = ()=> ZEUSdestroyed = true;
+
+        OnZeusLand = () => OnReadyForActivation?.Invoke(true);
+
+
+        ShowBlackScreen();
+        HideElement(blackScreenTextBox);
+        yield return new WaitForSeconds(1f);
+        HideElement(blackScreen);
+        yield return new WaitForSeconds(1f);
+        HideBlackScreen();
+        yield return new WaitForSeconds(1f);
+
+
+        var taskConquest = AddTask("# Завершите террафомирование планеты");
+
+        var taskZEUS = AddTask("# Вызовите Z.E.U.S. в подходящей зоне");
+        tutorialText.text = "Встань в подходящую зону и вызовите модуль Z.E.U.S. нажав [F]";
+
+        while (!ZEUScalled) yield return null;
+
+        RemoveTask(taskZEUS);
+        tutorialText.text = "";
+        
 
         var isComplete = false;
         OnZoneComplete = (complete, outof) => {
             Debug.Log($"захвачено {complete}/{outof}");
             isComplete = complete == outof;
+            taskConquest.text = $"# Завершите террафомирование планеты [{(float)complete/(float)outof *100 }%]";
         };
 
-        while (!isComplete) {
+
+        while (!isComplete && !ZEUSdestroyed) {
             yield return null;
+        }
+
+
+        if (ZEUSdestroyed) {
+            SetBlackScreenMessage("МИССИЯ ПРОВАЛЕНА");
+            ShowElement(blackScreenTextBox);
+            SetBottomMessage("[Каждый модуль Z.E.U.S. стоит 1000000000000000000000000000000$ мы не можем себе позволить потерять ни одного]");
+            RESTART_SCENE();
+        } else {
+            RemoveTask(taskConquest);
+            ShowBlackScreen();
+            SetBlackScreenMessage("МИССИЯ ВЫПОЛНЕНА");
+            SetBottomMessage("Это место станет раем");
+            yield return new WaitForSeconds(2f);
+            GameManager.LoadNextLevel();
         }
 
         yield return new WaitForSeconds(2);
@@ -375,8 +427,9 @@ public class LevelNarrator : MonoBehaviour {
             yield return new WaitForSeconds(3f);
             SetBottomMessage("миссия провалена.");
             yield return new WaitForSeconds(3f);
+            SetBlackScreenMessage("МИССИЯ ПРОВАЛЕНА");
+            ShowElement(blackScreenTextBox);
             SetBottomMessage("Миллиарды должны умереть...");
-            yield return new WaitForSeconds(2f);
             RESTART_SCENE();
         } else {
             RemoveTask(taskProtect);
@@ -385,12 +438,13 @@ public class LevelNarrator : MonoBehaviour {
             yield return new WaitForSeconds(3f);
             SetBottomMessage("вы справились.");
             yield return new WaitForSeconds(3f);
+            SetBlackScreenMessage("МИССИЯ ВЫПОЛНЕНА");
             SetBottomMessage("Миллиарды должны дышать чистым воздухом.");
+            yield return new WaitForSeconds(2f);
+            GameManager.LoadNextLevel();
         }
 
         
-
-
         yield return null;
     }
 
