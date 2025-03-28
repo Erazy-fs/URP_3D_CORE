@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 
 public class MenuManager : MonoBehaviour
 {
+    public GameObject levelNarrator;
     private UIDocument document;
 
     private VisualElement mainMenu;
@@ -73,6 +74,7 @@ public class MenuManager : MonoBehaviour
     public void StartNewGame()
     {
         Debug.Log("StartNewGame");
+        levelNarrator.SetActive(true);
         mainMenu.style.display = DisplayStyle.None;
         PlayerPrefs.SetInt("CompletedLevels", 0);
         GameManager.StartGame();
