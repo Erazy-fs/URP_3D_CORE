@@ -2651,10 +2651,14 @@ PrefabInstance:
       objectReference: {fileID: 267821862}
     - target: {fileID: 6131830871103393175, guid: 0e5616188d8c89f4ab51b1ea08697129, type: 3}
       propertyPath: levels.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6131830871103393175, guid: 0e5616188d8c89f4ab51b1ea08697129, type: 3}
       propertyPath: 'levels.Array.data[0]'
+      value: Level_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131830871103393175, guid: 0e5616188d8c89f4ab51b1ea08697129, type: 3}
+      propertyPath: 'levels.Array.data[1]'
       value: Level_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
