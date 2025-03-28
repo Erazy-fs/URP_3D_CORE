@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerSounds : MonoBehaviour
 {
-
     public AudioSource audioSource;
     public AudioClip[] stepSounds;
     private Animator animator;
@@ -30,7 +29,7 @@ public class PlayerSounds : MonoBehaviour
     }
 
     private bool IsGrounded()
-{
-    return Physics.Raycast(transform.position, Vector3.down, 1.1f);
-}
+    {
+        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
+    }
 }
