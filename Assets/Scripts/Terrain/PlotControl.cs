@@ -13,6 +13,8 @@ public class PlotControl : MonoBehaviour {
     public  bool doWave      = true;
     public float maxRadius;
 
+    public bool isComplete = false;
+
     private int waveIndex = 0;
     private bool isUpdating = false;
     public bool plotUpdating {get=>isUpdating;}
