@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
         try
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            InteractionWithItems interactionWithItems = player.GetComponent<InteractionWithItems>();
+            PlayerInteractionWithItems interactionWithItems = player.GetComponent<PlayerInteractionWithItems>();
             TopDownControl topDownControl = player.GetComponent<TopDownControl>();
             interactionWithItems.enabled = true;
             topDownControl.enabled = true;
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
             TogglePause();
         }
 
-        if (Input.GetKeyDown(KeyCode.N)) // Временное решение для перехода на следующий уровень
+        if (Input.GetKeyDown(KeyCode.N)) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         {
             LoadNextLevel();
         }

@@ -18,18 +18,18 @@ public class PlayerInteractionWithItems : MonoBehaviour
     bool isActivated = false;
     private void InteractionRay()
     {
-        if (Input.GetKeyDown(KeyCode.F)){
+        // if (Input.GetKeyDown(KeyCode.F)){
 
-            if (Physics.Raycast(transform.position, Vector3.down, out var hit, 2)) {
-                var obj = hit.collider.gameObject;
-                Debug.Log("object: " + obj.name);
-                var plot = obj.GetComponent<PlotControl>();
-                if (plot is not null)
-                    groundControl.CallInZEUS(hit.point, plot.colorIndex);
-            } 
-        }
-        else
-        {
+        //     if (Physics.Raycast(transform.position, Vector3.down, out var hit, 2)) {
+        //         var obj = hit.collider.gameObject;
+        //         Debug.Log("object: " + obj.name);
+        //         var plot = obj.GetComponent<PlotControl>();
+        //         if (plot is not null)
+        //             groundControl.CallInZEUS(hit.point, plot.colorIndex);
+        //     } 
+        // }
+        // else
+        // {
             Vector3 rayOrigin = playerTransform.position;
             Vector3 rayDirection = playerTransform.forward;
             RaycastHit hit;
@@ -37,9 +37,10 @@ public class PlayerInteractionWithItems : MonoBehaviour
 
             if (Physics.Raycast(rayOrigin, rayDirection, out hit, interactionDistance))
             {
-                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+                Transform rootTransform = hit.collider.transform.root;
+                IInteractable interactable = rootTransform.GetComponent<IInteractable>();
 
-                if (interactable is not null)
+                if (interactable is not null && interactable.CanInteract)
                 {
                     hitSomething = true;
                     interactionText.text = interactable.GetDescription();
@@ -53,7 +54,7 @@ public class PlayerInteractionWithItems : MonoBehaviour
                 }
             }
             interactionUI.SetActive(hitSomething);
-        }
+        // }
 
     }
 }

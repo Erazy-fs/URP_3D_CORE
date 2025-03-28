@@ -99,7 +99,7 @@ public class GroundControl : MonoBehaviour
         zeusAnimator = zeus.GetComponentsInChildren<Animator>().First();
 
         penetratorInteraction = zeus.GetComponentsInChildren<IInteractable>().First() as PenetratorInteraction;
-        penetratorInteraction?.Interact(KeyCode.F);
+        penetratorInteraction.narrator = narrator;
         
         var radiuses = new Dictionary<PlotControl, float>();
         currentPlotGroup = plotGroups[plotGroupIndex];
