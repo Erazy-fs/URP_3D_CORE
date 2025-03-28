@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public SettingsManager settingsManager;
     public PauseMenu pauseMenu;
     public string[] levels;
-    private bool isPaused = false;
+    public bool isPaused = false;
 
     private void Awake()
     {
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
             TogglePause();
         }
 
-        if (Input.GetKeyDown(KeyCode.N)) // Временное решение для перехода на следующий уровень
+        if (Input.GetKeyDown(KeyCode.N)) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         {
             LoadNextLevel();
         }

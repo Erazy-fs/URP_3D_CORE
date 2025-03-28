@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   narratorUIdoc: {fileID: 0}
   player: {fileID: 0}
+  groundControl: {fileID: 0}
   sceneName: basic
 --- !u!1 &69314861902255460
 GameObject:
@@ -246,14 +247,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 440b0e50ac461914f81d2b037fe8231e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  narrator: {fileID: 0}
+  narrator: {fileID: 6250518811897089178}
   colorsCount: 12
+  colorStep: 6
   zeusPrefab: {fileID: 5685534846208599451, guid: 9d861b29e9748a14cb08cd5a4173c197, type: 3}
-  waveDuratation: 15
-  timeBetweenWaves: 5
-  waveCount: 3
+  waveDuratation: 50
+  timeBetweenWaves: 30
+  waveCount: 2
   downCamera: {fileID: 1200499072084919884}
   zeusUIdoc: {fileID: 1167922432108754765}
+  canSpawn: 1
 --- !u!1 &6166633207239744984
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,6 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   narratorUIdoc: {fileID: 4945837959922416199}
   player: {fileID: 8994701883239500717}
+  groundControl: {fileID: 0}
   sceneName: tutorial
 --- !u!1001 &315580464114145798
 PrefabInstance:
@@ -575,15 +579,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3211523066712541866, guid: b6214379c1204c04d9f4bfd2cdffe287, type: 3}
       propertyPath: m_BackGroundColor.b
-      value: 0.21960784
+      value: 0.14386205
       objectReference: {fileID: 0}
     - target: {fileID: 3211523066712541866, guid: b6214379c1204c04d9f4bfd2cdffe287, type: 3}
       propertyPath: m_BackGroundColor.g
-      value: 0.21960784
+      value: 0.14386205
       objectReference: {fileID: 0}
     - target: {fileID: 3211523066712541866, guid: b6214379c1204c04d9f4bfd2cdffe287, type: 3}
       propertyPath: m_BackGroundColor.r
-      value: 0.22745098
+      value: 0.14899999
       objectReference: {fileID: 0}
     - target: {fileID: 4421302536632470519, guid: b6214379c1204c04d9f4bfd2cdffe287, type: 3}
       propertyPath: player

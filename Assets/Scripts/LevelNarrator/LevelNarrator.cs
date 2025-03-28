@@ -20,8 +20,11 @@ public class LevelNarrator : MonoBehaviour {
 
     public GameObject player;
     private TopDownControl playerControl;
+    public GroundControl groundControl;
 
     public string sceneName;
+
+    private Coroutine narratorCoroutine;
     void Start() {
         playerControl = player.GetComponent<TopDownControl>();
         narratorUI         = narratorUIdoc.rootVisualElement;
@@ -40,9 +43,9 @@ public class LevelNarrator : MonoBehaviour {
         SetBottomMessage("");
 
         if (sceneName=="basic"){
-            StartCoroutine(BasicScene());
+            narratorCoroutine = StartCoroutine(BasicScene());
         } else if (sceneName == "tutorial") {
-            StartCoroutine(TutorialScene());
+            narratorCoroutine = StartCoroutine(TutorialScene());
         }
 
         OnStart?.Invoke();
@@ -51,9 +54,6 @@ public class LevelNarrator : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)){
-            blackScreen.ToggleInClassList("narrator_zero");
-        }
     }
 
 
@@ -75,6 +75,7 @@ public class LevelNarrator : MonoBehaviour {
     private void HideElement(VisualElement e){
         e.AddToClassList("narrator_zero");
     }
+    
     private void ShowElement(VisualElement e){
         e.RemoveFromClassList("narrator_zero");
     }
@@ -86,17 +87,24 @@ public class LevelNarrator : MonoBehaviour {
         HideElement(mainView);
         // blackScreen.style.opacity = new StyleFloat(1f);
     }
+
     private void HideBlackScreen(){
         blackScreen.style.display = DisplayStyle.None;
         HideElement(blackScreen);
         mainView.style.display    = DisplayStyle.Flex;
         ShowElement(mainView);
     }
+    
     private void SetBlackScreenMessage(string message){
         ShowElement(blackScreenTextBox);
         blackScreenText.text = message;
     }
 
+    private void RESTART_SCENE(){
+        StopCoroutine(narratorCoroutine);
+        ShowBlackScreen();
+        Debug.Log("ВЫЗВАТЬ РЕСТАРТ!!!");
+    }
 
     IEnumerator BasicScene(){
         OnStart = () => {
@@ -125,6 +133,7 @@ public class LevelNarrator : MonoBehaviour {
         OnPlayerDeath = ()=>{
             ShowBlackScreen();
             SetBlackScreenMessage("УМЕР");
+            RESTART_SCENE();
         };
         
         var foundZone = false;
@@ -139,6 +148,24 @@ public class LevelNarrator : MonoBehaviour {
 
         var ZEUSactivated = false;
         OnZeusActivate = () => {ZEUSactivated = true;};
+
+        var stage2Started = false;
+        OnStageStart = (stageIndex, stageCount)=>{
+            if (stageIndex==2) stage2Started = true;
+        };
+
+        var stage1Ended = false;
+        var stage2Ended = false;
+        OnStageEnd = (stageIndex, stageCount)=>{
+            if (stageIndex==1) stage1Ended = true;
+            if (stageIndex==2) stage2Ended = true;
+            Debug.Log($"{stageIndex}/{stageCount} [{stage1Ended}, {stage2Ended}]");
+        };
+
+        var ZEUSdestroyed = false;
+        OnZeusDestroy = ()=>{
+            ZEUSdestroyed = true;
+        };
 
         playerControl.canMove  = false;
         playerControl.canShoot = false;
@@ -175,8 +202,8 @@ public class LevelNarrator : MonoBehaviour {
         var taskA = AddTask("# Нажмите [A]");
         var taskS = AddTask("# Нажмите [S]");
         var taskD = AddTask("# Нажмите [D]");
-
         ShowElement(tutorialText);
+        yield return new WaitForSeconds(.5f);
 
 
         var bW = false;
@@ -184,10 +211,10 @@ public class LevelNarrator : MonoBehaviour {
         var bS = false;
         var bD = false;
         while (!(bW&&bA&&bS&&bD)) {
-            if (Input.GetKeyDown(KeyCode.W)) {bW = true; RemoveTask(taskW);}
-            if (Input.GetKeyDown(KeyCode.A)) {bA = true; RemoveTask(taskA);}
-            if (Input.GetKeyDown(KeyCode.S)) {bS = true; RemoveTask(taskS);}
-            if (Input.GetKeyDown(KeyCode.D)) {bD = true; RemoveTask(taskD);}
+            if (Input.GetKeyDown(KeyCode.W)) {bW = true; RemoveTask(taskW); yield return null;}
+            if (Input.GetKeyDown(KeyCode.A)) {bA = true; RemoveTask(taskA); yield return null;}
+            if (Input.GetKeyDown(KeyCode.S)) {bS = true; RemoveTask(taskS); yield return null;}
+            if (Input.GetKeyDown(KeyCode.D)) {bD = true; RemoveTask(taskD); yield return null;}
             yield return null;
         }
         tutorialText.text = "";
@@ -206,13 +233,10 @@ public class LevelNarrator : MonoBehaviour {
 
 
         SetBottomMessage("...бъясню вашу задачу и буду направлять вас по ходу выполнения. Слушайте внимательно.");
-        yield return new WaitForSeconds(7f);
-        SetBottomMessage("зЗЗзз...П");
-        yield return new WaitForSeconds(3f);
-
+        yield return new WaitForSeconds(6f);
 
         SetBottomMessage("Наша цель — установка модуля Z.E.U.S. в подходящей зоне.");
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(5f);
         var taskZEUSland = AddTask("# Установить модуль Z.E.U.S.");
         yield return new WaitForSeconds(3f);
 
@@ -224,7 +248,7 @@ public class LevelNarrator : MonoBehaviour {
 
 
         SetBottomMessage("Предположително такая зона находится НА СЕВЕРЕ");
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(4f);
         taskFindLand.text += " НА СЕВЕРЕ";
         SetBottomMessage("");
 
@@ -251,23 +275,29 @@ public class LevelNarrator : MonoBehaviour {
 
         tutorialText.text = "";
         SetBottomMessage("Модуль на подходе. Ожидайте.");
-
-        yield return new WaitForSeconds(3f);
-
+        groundControl.canSpawn = false;
         while(!ZEUSlanded){
             yield return null;
         }
         RemoveTask(taskZEUSland);        
         yield return new WaitForSeconds(1f);
 
-        SetBottomMessage("Вы уже близки к завершению работы. Сейчас я объясню, как правильно запустить устройство терраформирования. Слушайте внимательно — этот этап крайне важен для успеха всей миссии.");
-        yield return new WaitForSeconds(6f);
+        if (!ZEUSactivated){
+            SetBottomMessage("Вы уже близки к завершению работы. Сейчас я объясню, как правильно запустить устройство терраформирования. Слушайте внимательно — этот этап крайне важен для успеха всей миссии.");
+            yield return new WaitForSeconds(6f);
+        }
 
         var taskActivate = AddTask("# Активируйте модуль");
-        SetBottomMessage("Начните с включения основного энергетического контура. Для этого найдите панель управления на правой стороне устройства — она обозначена синей полосой. Откройте её и нажмите кнопку активации. Вы должны увидеть зелёный световой сигнал — это означает, что энергия поступает в систему. Если сигнала нет, проверьте соединения и перезапустите контур. После активации энергосистемы переходите к загрузке реагентов.На задней панели устройства расположены капсулы с химическими веществами и микроорганизмами. Убедитесь, что все они закреплены плотно и не повреждены. Если всё в порядке, поверните рычаг активации на панели управления — он находится слева от главного дисплея. Это запустит процесс распределения реагентов в атмосферу и почву. Важно: после запуска процесса устройство начнет работать автономно, но первые несколько часов требуют вашего внимания. Наблюдайте за показателями на главном дисплее.");
-        yield return new WaitForSeconds(7f);
-        SetBottomMessage("Надеюсь понятно объяснил");
-        yield return new WaitForSeconds(2f);
+        
+        if (!ZEUSactivated) {
+            SetBottomMessage("Начните с включения основного энергетического контура. Для этого найдите панель управления на правой стороне устройства — она обозначена синей полосой. Откройте её и нажмите кнопку активации. Вы должны увидеть зелёный световой сигнал — это означает, что энергия поступает в систему. Если сигнала нет, проверьте соединения и перезапустите контур. После активации энергосистемы переходите к загрузке реагентов.На задней панели устройства расположены капсулы с химическими веществами и микроорганизмами. Убедитесь, что все они закреплены плотно и не повреждены. Если всё в порядке, поверните рычаг активации на панели управления — он находится слева от главного дисплея. Это запустит процесс распределения реагентов в атмосферу и почву. Важно: после запуска процесса устройство начнет работать автономно, но первые несколько часов требуют вашего внимания. Наблюдайте за показателями на главном дисплее.");
+            yield return new WaitForSeconds(7f);
+        }
+        if (!ZEUSactivated) {
+            SetBottomMessage("Надеюсь понятно объяснил");
+            yield return new WaitForSeconds(2.5f);
+        }
+        SetBottomMessage("");
         tutorialText.text = "Подойдите к модулю и нажмите [E]";
 
         while (!ZEUSactivated) {
@@ -277,9 +307,86 @@ public class LevelNarrator : MonoBehaviour {
         tutorialText.text = "";
         SetBottomMessage("");
 
+        yield return new WaitForSeconds(1f);
 
 
+        SetBottomMessage("Процесс терраформирования запущен.");
+        var taskWait = AddTask("Ожидайте завершения процесса терраформирования");
+        yield return new WaitForSeconds(2f);
+        SetBottomMessage("Смотрите внимательно, почва преобразуется прямо под вашими ногами. Планета положительно...");
+        yield return new WaitForSeconds(5);
+        SetBottomMessage("РЕАГИРУЕТ на наше вмешательство.");
+        yield return new WaitForSeconds(3f);
+        SetBottomMessage("Скоро это место станет пригодным для жизни миллионов");
+        yield return new WaitForSeconds(3f);
+        SetBottomMessage("");
+        
         playerControl.canShoot = true;
+        yield return new WaitForSeconds(2f);
+        SetBottomMessage("Пока устройство терраформирования работает в автономном режиме, у нас есть немного времени для тренировки. Я хочу, чтобы вы освоили использование стандартного оружия.");
+        yield return new WaitForSeconds(5f);
+        SetBottomMessage("Ваше оружие имеет два режима стрельбы: одиночный и очередь.");
+        yield return new WaitForSeconds(4f);
+        SetBottomMessage("Выберите мишень — можно использовать камни или обломки скал на безопасном расстоянии. Начните с одиночного режима. Цельтесь спокойно, следите за дыханием. Выстрелите несколько раз, чтобы привыкнуть к отдаче и точности.");
+        tutorialText.text = "Нажмите и удерживайте [левую кнопку мыши] для одиночной стрельбы и [правую кнопку мыши для стрельбы очередью]. Используйте мышь для наведения.";
+        yield return new WaitForSeconds(5f);
+        SetBottomMessage("");
+
+        while (!stage1Ended) {
+            yield return null;
+        }
+
+        groundControl.canSpawn = true;
+
+        SetBottomMessage("Модуль терраформирования перешел в режим охлаждения. Это нормально — система автоматически активирует этот режим после завершения выполнения этапа. Ожидайте.");
+        yield return new WaitForSeconds(6f);
+        
+        SetBottomMessage("");
+        tutorialText.text = "";
+
+        while (!stage2Started) {
+            yield return null;
+        }
+
+        SetBottomMessage("Я вижу аномалии в данных с устройства сканирования. Что-то происходит... О нет... Мы не ожидали такой...");
+        yield return new WaitForSeconds(5f);
+        SetBottomMessage("РЕАКЦИИ");
+        yield return new WaitForSeconds(3f);
+        SetBottomMessage("ЗАЩИЩАЙТЕ МОДУЛЬ Z.E.U.S.");
+        var taskProtect = AddTask("ЗАЩИЩАЙТЕ МОДУЛЬ Z.E.U.S.");
+        yield return new WaitForSeconds(3f);
+        SetBottomMessage("ЛЮБОЙ ЦЕНОЙ!");
+        taskProtect.text += " ЛЮБОЙ ЦЕНОЙ!";
+        yield return new WaitForSeconds(3f);
+        SetBottomMessage("ЛЮБОЙ ЦЕНОЙ!");
+        yield return new WaitForSeconds(2f);
+        SetBottomMessage("");
+
+
+        while(!stage2Ended && !ZEUSdestroyed){
+            yield return null;
+        }
+
+        if (ZEUSdestroyed) {
+            SetBottomMessage("Мой Бог...");
+            yield return new WaitForSeconds(3f);
+            SetBottomMessage("миссия провалена.");
+            yield return new WaitForSeconds(3f);
+            SetBottomMessage("Миллиарды должны умереть...");
+            yield return new WaitForSeconds(2f);
+            RESTART_SCENE();
+        } else {
+            RemoveTask(taskProtect);
+            RemoveTask(taskWait);
+            SetBottomMessage("Мой Бог...");
+            yield return new WaitForSeconds(3f);
+            SetBottomMessage("вы справились.");
+            yield return new WaitForSeconds(3f);
+            SetBottomMessage("Миллиарды должны дышать чистым воздухом.");
+        }
+
+        
+
 
         yield return null;
     }

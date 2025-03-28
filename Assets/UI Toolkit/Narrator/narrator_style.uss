@@ -20,5 +20,4 @@
     border-left-width: 2px;
     margin-bottom: 0;
     margin-top: 10px;
-    opacity: 0.7;
 }
