@@ -2893,6 +2893,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6250518811897089178, guid: 298d19347e9d57345be37d58b8ec70a7, type: 3}
+      propertyPath: sceneName
+      value: tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 6250518811897089178, guid: 298d19347e9d57345be37d58b8ec70a7, type: 3}
       propertyPath: groundControl
       value: 
       objectReference: {fileID: 1117832908}
