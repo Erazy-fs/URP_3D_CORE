@@ -10,10 +10,10 @@ public class LevelManager : MonoBehaviour
     public List<EnemyWave> waves;
     private int waveIndex = 0;
 
-    // TEMP
-    //public GameObject spawnPointsGameObject;
-    //private List<SpawnPoint> spawnPoints;
-    // TEMP
+#if UNITY_EDITOR
+    public GameObject spawnPointsGameObject;
+    private List<SpawnPoint> spawnPoints;
+#endif
 
     private void Awake()
     {
@@ -39,17 +39,17 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-//    private void Update()
-//    {
-//#if UNITY_EDITOR
-//        if (Input.GetKeyDown(KeyCode.T))
-//        {
-//            GameObject zeusObject = GameObject.FindGameObjectWithTag("Zeus");
-//            spawnPoints = spawnPointsGameObject.GetComponentsInChildren<SpawnPoint>().ToList();
-//            spawnPoints.ForEach(sp => sp.SetTarget(zeusObject.transform));
-//            LevelManager.StartNextEnemyWave(spawnPoints);
-//        }
-//#endif
-//    }
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            GameObject zeusObject = GameObject.FindGameObjectWithTag("Zeus");
+            spawnPoints = spawnPointsGameObject.GetComponentsInChildren<SpawnPoint>().ToList();
+            spawnPoints.ForEach(sp => sp.SetTarget(zeusObject.transform));
+            LevelManager.StartNextEnemyWave(spawnPoints);
+        }
+    }
+#endif
 
 }
