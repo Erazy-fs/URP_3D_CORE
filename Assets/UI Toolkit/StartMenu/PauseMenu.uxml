@@ -1,0 +1,7 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/StartMenu/StartMenuStyles.uss?fileID=7433441132597879392&amp;guid=0665c363a70b51e4598d45bbac3ca6fa&amp;type=3#StartMenuStyles" />
+    <engine:VisualElement name="pause_menu" style="flex-grow: 1; width: 35%; height: 100%; flex-direction: column; display: none; align-items: center; justify-content: center; align-self: center; font-size: 46%;">
+        <engine:Button text="продолжить" name="button_continue" class="menu_button" style="margin-top: 35px; height: 40px;" />
+        <engine:Button text="главное меню" name="button_main_menu" class="menu_button" style="height: 40px;" />
+    </engine:VisualElement>
+</engine:UXML>
