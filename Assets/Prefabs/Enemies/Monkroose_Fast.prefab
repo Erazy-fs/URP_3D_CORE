@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: isRunner
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2051763144014442916, guid: ce94b40811b106148ae5e44ca0305dce, type: 3}
+      propertyPath: enemySpeed
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3822266426929243301, guid: ce94b40811b106148ae5e44ca0305dce, type: 3}
       propertyPath: m_Name
       value: Monkroose_Fast
