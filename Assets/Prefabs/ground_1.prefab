@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e69cbf9efce55046b5aa7786280d87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  narratorUIdoc: {fileID: 0}
-  player: {fileID: 0}
-  groundControl: {fileID: 0}
+  narratorUIdoc: {fileID: 4945837959922416199}
+  player: {fileID: 8994701883239500717}
+  groundControl: {fileID: 8882345634017589224}
   sceneName: basic
 --- !u!1 &69314861902255460
 GameObject:
@@ -354,8 +354,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   narratorUIdoc: {fileID: 4945837959922416199}
   player: {fileID: 8994701883239500717}
-  groundControl: {fileID: 0}
-  sceneName: tutorial
+  groundControl: {fileID: 8882345634017589224}
+  sceneName: basic
 --- !u!1001 &315580464114145798
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -579,10 +579,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3092638645324722226, guid: e3e0329c950a6134a9388d280de8aee1, type: 3}
+      propertyPath: narrator
+      value: 
+      objectReference: {fileID: 6250518811897089178}
+    - target: {fileID: 3092638645324722226, guid: e3e0329c950a6134a9388d280de8aee1, type: 3}
       propertyPath: moveSpeed
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3092638645324722226, guid: e3e0329c950a6134a9388d280de8aee1, type: 3}
+      propertyPath: groundControl
+      value: 
+      objectReference: {fileID: 8882345634017589224}
+    - target: {fileID: 6785096465889502133, guid: e3e0329c950a6134a9388d280de8aee1, type: 3}
       propertyPath: groundControl
       value: 
       objectReference: {fileID: 8882345634017589224}

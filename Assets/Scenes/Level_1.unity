@@ -2130,6 +2130,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ground_1
       objectReference: {fileID: 0}
+    - target: {fileID: 4648420862972381856, guid: 298d19347e9d57345be37d58b8ec70a7, type: 3}
+      propertyPath: groundControl
+      value: 
+      objectReference: {fileID: 1117832908}
     - target: {fileID: 5490106023097280696, guid: 298d19347e9d57345be37d58b8ec70a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 74.402275
@@ -2175,9 +2179,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6250518811897089178, guid: 298d19347e9d57345be37d58b8ec70a7, type: 3}
+      propertyPath: sceneName
+      value: tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 6250518811897089178, guid: 298d19347e9d57345be37d58b8ec70a7, type: 3}
       propertyPath: groundControl
       value: 
       objectReference: {fileID: 1117832908}
+    - target: {fileID: 6457920870689441826, guid: 298d19347e9d57345be37d58b8ec70a7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7910527990223056283, guid: 298d19347e9d57345be37d58b8ec70a7, type: 3}
       propertyPath: m_IsActive
       value: 0
