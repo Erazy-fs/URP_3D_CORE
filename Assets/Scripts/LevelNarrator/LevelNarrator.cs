@@ -300,6 +300,9 @@ public class LevelNarrator : MonoBehaviour {
         SetBottomMessage("");
         tutorialText.text = "Подойдите к модулю и нажмите [E]";
 
+        // Для появления кнопки активации [E]
+        OnReadyForActivation?.Invoke(true);
+
         while (!ZEUSactivated) {
             yield return null;
         }
@@ -452,6 +455,7 @@ public class LevelNarrator : MonoBehaviour {
         OnPlayerDeath?.Invoke();
     }
 
+    public event Action<bool> OnReadyForActivation;
 
 
 

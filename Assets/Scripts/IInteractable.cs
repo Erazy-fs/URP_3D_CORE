@@ -2,6 +2,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    void Interact();
+    bool CanInteract { get; set; }
+    void Interact(KeyCode keyCode);
     string GetDescription();
 }
