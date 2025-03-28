@@ -10,6 +10,7 @@ public class GroundControl : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public LevelNarrator narrator;
     public int colorsCount = 12;
+    public int colorStep = 4;
     public GameObject zeusPrefab;
 
     public float waveDuratation   = 5f;
@@ -22,6 +23,8 @@ public class GroundControl : MonoBehaviour
     private VisualElement zeusUIBar;
     private Label zeusUIMessage;
     private Label zeusUIWave;
+
+    public bool canSpawn = true;
 
     private PlotControl[] plots = new PlotControl[]{};
     private Dictionary<int, List<PlotControl>> plotGroups = new();
@@ -164,13 +167,15 @@ public class GroundControl : MonoBehaviour
             yield return new WaitForSeconds(2.9f); //Подъем перед ударом
 
             //Запуск волны врагов
-            StartEnemyWave();
+            if (canSpawn) {
+                StartEnemyWave();
+            }
 
             //Запуск ударов
             int visualWavesCount = (int)Mathf.Ceil(waveDuratation / 3f)+1;   //Кол-во визуальных волн
             foreach (var plot in currentPlotGroup) {
                 Color.RGBToHSV(plot.startColor, out _, out var s, out var v);
-                var colorIndex = plot.colorIndex + 4; //new System.Random().Next(0, colorsCount);
+                var colorIndex = plot.colorIndex + colorStep; //new System.Random().Next(0, colorsCount);
                 if (colorIndex >= colorsCount) colorIndex -= colorsCount;
                 var newColor = Color.HSVToRGB((float)colorIndex / colorsCount, s, v);
                 plot.StartWaves(newColor, visualWavesCount, colorIndex, 3, maxRadius, waveIndex==waveCount);
@@ -188,6 +193,8 @@ public class GroundControl : MonoBehaviour
                 narrator.StageProgress(progress, waveIndex, waveCount);
                 yield return null;
             }
+
+            narrator.StageEnd(waveIndex, waveCount);
 
             //Остановка ударов
             zeusAnimator.SetBool("isPumping", false);
@@ -209,7 +216,6 @@ public class GroundControl : MonoBehaviour
                 // SetMessage($"executing...");
                 SetMessage($"выполнение этапа...");
             }            
-            narrator.StageEnd(waveIndex, waveCount);
         }
         foreach (var plot in currentPlotGroup) {
             plot.isComplete = true;

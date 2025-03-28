@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public SettingsManager settingsManager;
     public PauseMenu pauseMenu;
     public string[] levels;
-    private bool isPaused = false;
+    public bool isPaused = false;
 
     private void Awake()
     {

@@ -41,7 +41,7 @@ public class TopDownControl : MonoBehaviour{
             isGrounded = controller.isGrounded;
 
             if (isGrounded && velocity.y < 0) 
-                velocity.y = -2f;
+                velocity.y = -3f;
 
             var leftButton  = Input.GetMouseButton(0);
             var rightButton = Input.GetMouseButton(1);
