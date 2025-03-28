@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     public bool isRunner;
     //public float zeusAttackOffset;
 
+    public bool isActive = true;
     private string movingAnimationName;
     private NavMeshAgent agent;
     private Animator animator;
@@ -47,7 +48,7 @@ public class Enemy : MonoBehaviour
     {
         agent.speed = (animator?.GetAnimatorTransitionInfo(0).duration ?? 0) == 0 && (animator?.GetCurrentAnimatorStateInfo(0).IsName(movingAnimationName) ?? false) ? enemySpeed : 0;
         Transform target = GetTarget();
-        if (target != null)
+        if (isActive && target != null)
         {
             //Debug.Log($"speed: {enemySpeed}");
             NavMeshPath path = new NavMeshPath();
