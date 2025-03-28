@@ -74,7 +74,7 @@ public class MenuManager : MonoBehaviour
     public void StartNewGame()
     {
         Debug.Log("StartNewGame");
-        //levelNarrator.SetActive(true);
+        levelNarrator.SetActive(true);
         mainMenu.style.display = DisplayStyle.None;
         PlayerPrefs.SetInt("CompletedLevels", 0);
         GameManager.StartGame();
