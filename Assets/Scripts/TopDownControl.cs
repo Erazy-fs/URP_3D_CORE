@@ -106,10 +106,10 @@ public class TopDownControl : MonoBehaviour{
         var groundPlane = new Plane(Vector3.up, transform.position);
         if (groundPlane.Raycast(ray, out float distance)) {
             Vector3 direction = ray.GetPoint(distance) - transform.position;
-            direction.y = 0; 
+            direction.y = 0;
             if (direction != Vector3.zero)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                Quaternion targetRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 10, 0);
                 transform.rotation = targetRotation;
             }
         }

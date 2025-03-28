@@ -101,6 +101,7 @@ MonoBehaviour:
   enemySpeed: 2.8
   attackDamage: 8
   isRunner: 0
+  isActive: 0
 --- !u!114 &-8454390973450573343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,8 +169,8 @@ Rigidbody:
   m_GameObject: {fileID: 3984038253167857150}
   serializedVersion: 4
   m_Mass: 70
-  m_Drag: 20
-  m_AngularDrag: 20
+  m_Drag: 5
+  m_AngularDrag: 10
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -184,7 +185,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &908411852750827324
 CapsuleCollider:

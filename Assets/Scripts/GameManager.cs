@@ -86,10 +86,12 @@ public class GameManager : MonoBehaviour
             TogglePause();
         }
 
-        if (Input.GetKeyDown(KeyCode.N)) // ��������� ������� ��� �������� �� ��������� �������
+        #if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.N))
         {
             LoadNextLevel();
         }
+        #endif
     }
 
     public static void TogglePause()

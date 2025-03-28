@@ -101,6 +101,7 @@ MonoBehaviour:
   enemySpeed: 2
   attackDamage: 9
   isRunner: 0
+  isActive: 0
 --- !u!114 &931936571849884013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,7 +169,7 @@ Rigidbody:
   m_GameObject: {fileID: 4372497144205828850}
   serializedVersion: 4
   m_Mass: 60
-  m_Drag: 10
+  m_Drag: 5
   m_AngularDrag: 10
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
